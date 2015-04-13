@@ -18,6 +18,7 @@ void initGL() {
 int windowWidth = 640;
 int windowHeight = 640;
 
+int windowid = 0;
 
 /* Handler for window-repaint event. Call back when the window first appears and
    whenever the window needs to be re-painted. */
@@ -47,17 +48,23 @@ void keyboard(unsigned char key, int x, int y) {
         case 'd':
             printf("d pressed!\n");
             break;
+		case 27:
+			if (windowid) {
+            	glutDestroyWindow(windowid);
+            	exit(0);
+			}
+            break;
 	}
 }
 
- 
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);          // Initialize GLUT
 
+
 	glutInitWindowSize(windowWidth, windowHeight);   // Set the window's initial width & height
 	glutInitWindowPosition(50, 50);
-	glutCreateWindow("sadf");  // Create window with the given title
+	windowid = glutCreateWindow("sadf");  // Create window with the given title
 	glutDisplayFunc(display);       // Register callback handler for window re-paint event
 	glutKeyboardFunc(keyboard);
 	initGL();                       // Our own OpenGL initialization
