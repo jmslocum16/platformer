@@ -1,0 +1,6 @@
+#vim
+*.swp
+
+#compiled binaries
+*.o
+platform
