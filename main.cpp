@@ -7,6 +7,9 @@
 #endif
 
 #include <stdio.h>
+
+
+#include "imagemanager.h"
  
 /* Initialize OpenGL Graphics */
 void initGL() {
@@ -20,16 +23,28 @@ int windowHeight = 640;
 
 int windowid = 0;
 
+// images
+Image testImage;
+
+void loadResources() {
+	printf("loading resources\n");
+	loadImage("images/test.bmp", testImage);
+}
+
+// x and y in window coordinates, lower left corner of image to draw
+void drawImage(double x, double y, Image& i) {
+	double glX = -1.0 + 2.0*x/windowWidth;
+	double glY = -1.0 + 2.0*y/windowWidth;
+	glRasterPos2f(glX, glY);
+	glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+}
+
 /* Handler for window-repaint event. Call back when the window first appears and
    whenever the window needs to be re-painted. */
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);   // Clear the color buffer with current clearing color
 
-    glColor3f(1.0, 0.0, 0.0);
-    glBegin(GL_LINES);
-    glVertex2f(-1, -1);
-    glVertex2f(0, 0);
-    glEnd();
+	drawImage(320, 320, testImage);
 
 	printf("display\n");
 	
@@ -61,6 +76,7 @@ void keyboard(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);          // Initialize GLUT
 
+	loadResources();
 
 	glutInitWindowSize(windowWidth, windowHeight);   // Set the window's initial width & height
 	glutInitWindowPosition(50, 50);
