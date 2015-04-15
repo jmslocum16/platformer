@@ -21,7 +21,7 @@ CC = g++
 .cpp.o: 
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $<
 
-ALL.O = main.o imagemanager.o bitmap.o
+ALL.O = main.o imagemanager.o bitmap.o gameengine.o menu.o
 
 platform: $(ALL.O)
 	$(CC) $(CFLAGS) -o $@ $(ALL.O) $(INCLUDE) $(LIBDIR) $(LIBS)
