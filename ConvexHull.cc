@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 int orientation(const Vector2& p, const Vector2& q, const Vector2& r)
