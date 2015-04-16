@@ -23,6 +23,17 @@ public:
 		}
 	}
 
+	int numPoints() const
+	{
+		return n;
+	}
+
+	Vector2 getPoint(int index) const
+	{
+		assert(index >= 0 && index < n);
+		return pts[index];
+	}
+
 	Vector2 getSupport(const Vector2& direction) const
 	{
 		int bestIndex = 0;

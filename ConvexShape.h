@@ -8,7 +8,7 @@ public:
 	ConvexShape()
 	{}
 
-	~ConvexShape()
+	virtual ~ConvexShape()
 	{
 	}
 

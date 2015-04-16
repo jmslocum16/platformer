@@ -1,5 +1,7 @@
-#include "ConvexShape.h"
 #include "ConvexHull.cc"
+#include "ConvexShape.h"
+#include "ConvexPolygon.h"
+#include "Circle.h"
 
 #include <vector>
 
@@ -36,34 +38,52 @@ bool collides(const ConvexShape& a, const ConvexShape& b)
 	}
 }
 
-ConvexShape sweep(const Circle& c, const Vector2& v)
+ConvexShape* sweep(const Circle& c, const Vector2& v)
 {
 	// TODO(Jaime): Need to create convex class under convex shape
-	return Circle(0, 0);
+	return new Circle(Vector2(0, 0), 0);
 }
 
-ConvexShape sweep(const ConvexPolygon& a, const Vector2& v)
+ConvexShape* sweep(const ConvexPolygon& a, const Vector2& v)
 {
-	vector<Vector2> points, hull;
+	std::vector<Vector2> points, hull;
 
-	for (int i = 0; i < a.size(); ++i)
+	for (int i = 0; i < a.numPoints(); ++i)
 	{
-		points.push_back(a[i]);
-		points.push_back(a[i] + v);
+		points.push_back(a.getPoint(i));
+		points.push_back(a.getPoint(i) + v);
 	}
 
-	convexHull(points.begin(), points.size(), hull);
-	return ConvexPolygon(points.begin(), points.size());
+	convexHull(&points[0], points.size(), hull);
+	return new ConvexPolygon(&hull[0], hull.size());
+}
+
+ConvexShape* sweep(const ConvexShape& a, const Vector2& v)
+{
+	const Circle* c = dynamic_cast<const Circle*>(&a);
+
+	if (c == 0)
+	{
+		const ConvexPolygon* cp = dynamic_cast<const ConvexPolygon*>(&a);
+
+		assert(cp);
+
+		return sweep(*cp, v);
+	}
+
+	return sweep(*c, v);
 }
 
 float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 {
-	ConvexShape fullSweep = sweep(a, v);
+	ConvexShape* fullSweep = sweep(a, v);
 
-	if (!collides(fullSweep, b))
+	if (!collides(*fullSweep, b))
 	{
 		return -1.0;
 	}
+
+	delete fullSweep;
 
 	float lo = 0.0f, hi = 1.0f, mid;
 	float best = 1.0f;
@@ -71,9 +91,9 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 	while (lo <= hi && (hi - lo) <= EPSILON)
 	{
 		mid = lo + (hi - lo) / 2;
-		ConvexShape partialSweep = sweep(a, v * mid);
+		ConvexShape* partialSweep = sweep(a, v * mid);
 
-		if (collides(partialSweep, b))
+		if (collides(*partialSweep, b))
 		{
 			best = mid;
 			hi = mid - 1;
@@ -82,6 +102,8 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 		{
 			lo = mid + 1;
 		}
+
+		delete partialSweep;
 	}
 
 	return best;
