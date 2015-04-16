@@ -14,6 +14,11 @@ public:
 	{
 	}
 
+	Vector2 center() const
+	{
+		return center;
+	}
+
 	Vector2 getSupport(const Vector2& direction) const
 	{
 		Vector2 normalDir = direction.normalize();

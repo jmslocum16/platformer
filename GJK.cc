@@ -14,8 +14,7 @@ bool collides(const ConvexShape& a, const ConvexShape& b);
 
 ConvexShape* sweep(const Circle& c, const Vector2& v)
 {
-	// TODO(Jaime): Need to create convex class under convex shape
-	return new Circle(Vector2(0, 0), 0);
+	return new Capsule(c.center, c.center + v, c.radius);
 }
 
 ConvexShape* sweep(const ConvexPolygon& a, const Vector2& v)
@@ -29,11 +28,6 @@ ConvexShape* sweep(const ConvexPolygon& a, const Vector2& v)
 	}
 
 	convexHull(&points[0], points.size(), hull);
-
-	// for (int i = 0; i < hull.size(); ++i)
-	// {
-	// 	std::cout << hull[i].x() << " " << hull[i].y() << std::endl;
-	// }
 
 	return new ConvexPolygon(&hull[0], hull.size());
 }
