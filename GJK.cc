@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#define EPSILON .0001f
+#define EPSILON .000001f
 
 
 Vector2 support(const ConvexShape& a, const ConvexShape& b, const Vector2& d);
