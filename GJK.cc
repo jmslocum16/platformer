@@ -30,10 +30,10 @@ ConvexShape* sweep(const ConvexPolygon& a, const Vector2& v)
 
 	convexHull(&points[0], points.size(), hull);
 
-	for (int i = 0; i < hull.size(); ++i)
-	{
-		std::cout << hull[i].x() << " " << hull[i].y() << std::endl;
-	}
+	// for (int i = 0; i < hull.size(); ++i)
+	// {
+	// 	std::cout << hull[i].x() << " " << hull[i].y() << std::endl;
+	// }
 
 	return new ConvexPolygon(&hull[0], hull.size());
 }
@@ -68,7 +68,7 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 	float lo = 0.0f, hi = 1.0f, mid;
 	float best = 1.0f;
 
-	while (lo <= hi && (hi - lo) <= EPSILON)
+	while (lo <= hi && (hi - lo) > EPSILON)
 	{
 		mid = lo + (hi - lo) / 2;
 		ConvexShape* partialSweep = sweep(a, v * mid);
@@ -76,11 +76,11 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 		if (collides(*partialSweep, b))
 		{
 			best = mid;
-			hi = mid - 1;
+			hi = mid;
 		}
 		else
 		{
-			lo = mid + 1;
+			lo = mid;
 		}
 
 		delete partialSweep;
@@ -93,7 +93,7 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 bool collides(const ConvexShape& a, const ConvexShape& b)
 {
 	std::vector<Vector2> simplex;
-	Vector2 d(1, 0);
+	Vector2 d(1, 1);
 
 	simplex.push_back(support(a, b, d));
 	d = d * -1;
@@ -122,18 +122,20 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 	{
 		case 2:
 		{
-			const Vector2& a = simplex[1];
-			const Vector2& b = simplex[0];
+			Vector2 a = simplex[1];
+			Vector2 b = simplex[0];
 
-			const Vector2& ao = a * - 1;
-			const Vector2& ab = b - a;
+			Vector2 ao = a * -1;
+			Vector2 ab = b - a;
 
 			if (ab * ao >= 0)
 			{
+				// std::cout << "*" << std::endl;
 				d = ab.normal(ao);
 			}
 			else
 			{
+				// std::cout << "-" << std::endl;
 				simplex.erase(simplex.begin());
 				d = ao;
 			}
@@ -143,58 +145,68 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 
 		case 3:
 		{
-			const Vector2& a = simplex[2];
-			const Vector2& b = simplex[1];
-			const Vector2& c = simplex[0];
+			Vector2 a = simplex[2];
+			Vector2 b = simplex[1];
+			Vector2 c = simplex[0];
 
-			const Vector2& ao = a * -1;
-			const Vector2& ab = b - a;
-			const Vector2& ac = c - a;
+			Vector2 ao = a * -1;
+			Vector2 ab = b - a;
+			Vector2 ac = c - a;
 
 			Vector2 normal;
 
 			if (ab * ao >= 0)
 			{
+				// std::cout << 1;
 				normal = ab.normal(ao);
 
 				if (ac * normal >= 0)
 				{
+					// std::cout << 1;
 					normal = ac.normal(ao);
 
 					if (ab * normal >= 0)
 					{
+						// std::cout << 1 << std::endl;
 						return true;
 					}
 					else
 					{
+						// std::cout << 2 << std::endl;
 						simplex.erase(simplex.begin() + 1);
 						d = normal;
 					}
 				}
 				else
 				{
+					// std::cout << 2 << std::endl;
 					simplex.erase(simplex.begin());
 					d = normal;
 				}
 			}
 			else
 			{
+				// std::cout << 2;
 				if (ac * ao >= 0)
 				{
+					// std::cout << 1;
 					normal = ac.normal(ao);
 
 					if (ab * normal >= 0)
 					{
+						// std::cout << 1 << std::endl;
 						return true;
 					}
 					else
 					{
+						// std::cout << 2 << std::endl;
 						simplex.erase(simplex.begin() + 1);
 						d = normal;
 					}
 				}
 				else
 				{
+					// std::cout << 2 << std::endl;
 					simplex.erase(simplex.begin() + 1);
 					simplex.erase(simplex.begin());
 					d = ao;

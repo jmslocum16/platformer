@@ -38,11 +38,11 @@ public:
 	Vector2 getSupport(const Vector2& direction) const
 	{
 		int bestIndex = 0;
-		float maxDot = direction * pts[0];
+		float maxDot = pts[0] * direction;
 
 		for (int i = 1; i < n; ++i)
 		{
-			float dotProduct = direction * pts[i];
+			float dotProduct = pts[i] * direction;
 
 			if (dotProduct > maxDot)
 			{
