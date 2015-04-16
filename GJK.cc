@@ -1,4 +1,5 @@
 #include "ConvexShape.h"
+#include "ConvexHull.cc"
 
 #include <vector>
 
@@ -33,6 +34,57 @@ bool collides(const ConvexShape& a, const ConvexShape& b)
 			return true;
 		}
 	}
+}
+
+ConvexShape sweep(const Circle& c, const Vector2& v)
+{
+	// TODO(Jaime): Need to create convex class under convex shape
+	return Circle(0, 0);
+}
+
+ConvexShape sweep(const ConvexPolygon& a, const Vector2& v)
+{
+	vector<Vector2> points, hull;
+
+	for (int i = 0; i < a.size(); ++i)
+	{
+		points.push_back(a[i]);
+		points.push_back(a[i] + v);
+	}
+
+	convexHull(points.begin(), points.size(), hull);
+	return ConvexPolygon(points.begin(), points.size());
+}
+
+float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
+{
+	ConvexShape fullSweep = sweep(a, v);
+
+	if (!collides(fullSweep, b))
+	{
+		return -1.0;
+	}
+
+	float lo = 0.0f, hi = 1.0f, mid;
+	float best = 1.0f;
+
+	while (lo <= hi && (hi - lo) <= EPSILON)
+	{
+		mid = lo + (hi - lo) / 2;
+		ConvexShape partialSweep = sweep(a, v * mid);
+
+		if (collides(partialSweep, b))
+		{
+			best = mid;
+			hi = mid - 1;
+		}
+		else
+		{
+			lo = mid + 1;
+		}
+	}
+
+	return best;
 }
 
 bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
