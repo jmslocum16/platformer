@@ -14,9 +14,9 @@ int main()
 	Vector2 pts1[4] =
 	{
 		Vector2(0, 0),
-		Vector2(1, 0),
-		Vector2(1, 1),
-		Vector2(0, 1),
+		Vector2(4, 0),
+		Vector2(4.6, 4.6),
+		Vector2(0, 4),
 	};
 
 	Vector2 pts2[4] =

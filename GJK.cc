@@ -93,7 +93,7 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 bool collides(const ConvexShape& a, const ConvexShape& b)
 {
 	std::vector<Vector2> simplex;
-	Vector2 d(1, 0);
+	Vector2 d(1, 1);
 
 	simplex.push_back(support(a, b, d));
 	d = d * -1;
@@ -122,21 +122,17 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 	{
 		case 2:
 		{
-			Vector2 a = simplex[1];
-			Vector2 b = simplex[0];
+			const Vector2& a = simplex[1];
+			const Vector2& b = simplex[0];
 
-			Vector2 ao = a * -1;
-			Vector2 ab = b - a;
+			const Vector2& ao = a * - 1;
+			const Vector2& ab = b - a;
 
-			if (ab * ao > 0)
+			d = Vector2(-ab.y(), ab.x());
+
+			if (d * ao < 0)
 			{
-				d = ab.perp();
-				d = d * (a * d);
-			}
-			else
-			{
-				simplex.erase(simplex.begin());
-				d = ao;
+				d = d * -1;
 			}
 
 			return false;
@@ -144,55 +140,36 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 
 		case 3:
 		{
-			Vector2 a = simplex[2];
-			Vector2 b = simplex[1];
-			Vector2 c = simplex[0];
+			const Vector2& a = simplex[2];
+			const Vector2& b = simplex[1];
+			const Vector2& c = simplex[0];
 
-			Vector2 ao = a * -1;
-			Vector2 ab = b - a;
-			Vector2 ac = c - a;
+			const Vector2& ao = a * -1;
+			const Vector2& ab = b - a;
+			const Vector2& ac = c - a;
 
-			Vector2 acb = ab.perp();
-			acb = acb * (acb * (ac * -1));
-
-			Vector2 abc = ac.perp();
-			abc = abc * (abc * (ab * -1));
-
-			if (abc * ao > 0)
+			d = Vector2(-ab.y(), ab.x());
+			if (d * c > 0)
 			{
-				if (ab * ao > 0)
-				{
-					d = acb;
-					simplex.erase(simplex.begin());
-
-					return false;
-				}
-				else
-				{
-					d = ao;
-					simplex.erase(simplex.begin() + 1);
-					simplex.erase(simplex.begin());
-
-					return false;
-				}
+				d = d * -1;
 			}
-			else if (abc * ao > 0)
+
+			if (d * ao > 0)
 			{
-				if (ac * ao > 0)
-				{
-					d = abc;
-					simplex.erase(simplex.begin() + 1);
+				simplex.erase(simplex.begin());
+				return false;
+			}
 
-					return false;
-				}
-				else
-				{
-					d = ao;
-					simplex.erase(simplex.begin() + 1);
-					simplex.erase(simplex.begin());
+			d = Vector2(-ac.y(), ac.x());
+			if (d * b > 0)
+			{
+				d = d * -1;
+			}
 
-					return false;
-				}
+			if (d * ao > 0)
+			{
+				simplex.erase(simplex.begin() + 1);
+				return false;
 			}
 
 			return true;
