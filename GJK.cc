@@ -93,7 +93,7 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 bool collides(const ConvexShape& a, const ConvexShape& b)
 {
 	std::vector<Vector2> simplex;
-	Vector2 d(1, 1);
+	Vector2 d(1, 0);
 
 	simplex.push_back(support(a, b, d));
 	d = d * -1;
@@ -128,14 +128,13 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 			Vector2 ao = a * -1;
 			Vector2 ab = b - a;
 
-			if (ab * ao >= 0)
+			if (ab * ao > 0)
 			{
-				// std::cout << "*" << std::endl;
-				d = ab.normal(ao);
+				d = ab.perp();
+				d = d * (a * d);
 			}
 			else
 			{
-				// std::cout << "-" << std::endl;
 				simplex.erase(simplex.begin());
 				d = ao;
 			}
@@ -153,67 +152,50 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 			Vector2 ab = b - a;
 			Vector2 ac = c - a;
 
-			Vector2 normal;
+			Vector2 acb = ab.perp();
+			acb = acb * (acb * (ac * -1));
 
-			if (ab * ao >= 0)
+			Vector2 abc = ac.perp();
+			abc = abc * (abc * (ab * -1));
+
+			if (abc * ao > 0)
 			{
-				// std::cout << 1;
-				normal = ab.normal(ao);
-
-				if (ac * normal >= 0)
+				if (ab * ao > 0)
 				{
-					// std::cout << 1;
-					normal = ac.normal(ao);
-
-					if (ab * normal >= 0)
-					{
-						// std::cout << 1 << std::endl;
-						return true;
-					}
-					else
-					{
-						// std::cout << 2 << std::endl;
-						simplex.erase(simplex.begin() + 1);
-						d = normal;
-					}
-				}
-				else
-				{
-					// std::cout << 2 << std::endl;
+					d = acb;
 					simplex.erase(simplex.begin());
-					d = normal;
-				}
-			}
-			else
-			{
-				// std::cout << 2;
-				if (ac * ao >= 0)
-				{
-					// std::cout << 1;
-					normal = ac.normal(ao);
 
-					if (ab * normal >= 0)
-					{
-						// std::cout << 1 << std::endl;
-						return true;
-					}
-					else
-					{
-						// std::cout << 2 << std::endl;
-						simplex.erase(simplex.begin() + 1);
-						d = normal;
-					}
+					return false;
 				}
 				else
 				{
-					// std::cout << 2 << std::endl;
+					d = ao;
 					simplex.erase(simplex.begin() + 1);
 					simplex.erase(simplex.begin());
+
+					return false;
+				}
+			}
+			else if (abc * ao > 0)
+			{
+				if (ac * ao > 0)
+				{
+					d = abc;
+					simplex.erase(simplex.begin() + 1);
+
+					return false;
+				}
+				else
+				{
 					d = ao;
+					simplex.erase(simplex.begin() + 1);
+					simplex.erase(simplex.begin());
+
+					return false;
 				}
 			}
 
-			return false;
+			return true;
 		}
 
 		default:
@@ -224,7 +206,7 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 Vector2 support(const ConvexShape& a, const ConvexShape& b, const Vector2& d)
 {
 	Vector2 s1 = a.getSupport(d);
-	Vector2 s2 = b.getSupport(d);
+	Vector2 s2 = b.getSupport(d * -1);
 
 	return s1 - s2;
 }
