@@ -107,4 +107,12 @@ public:
 	{
 		return *this / sqrt(lengthSq());
 	}
+
+	Vector2 normal(const Vector2& other) const
+	{
+		float ax_by = i * other.j;
+		float ay_bx = j * other.i;
+
+		return Vector2(j * (ay_bx - ax_by), i * (ax_by - ay_bx));
+	}
 };

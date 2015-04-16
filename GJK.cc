@@ -128,11 +128,14 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 			const Vector2& ao = a * - 1;
 			const Vector2& ab = b - a;
 
-			d = Vector2(-ab.y(), ab.x());
-
-			if (d * ao < 0)
+			if (ab * ao >= 0)
 			{
-				d = d * -1;
+				d = ab.normal(ao);
+			}
+			else
+			{
+				simplex.erase(simplex.begin());
+				d = ao;
 			}
 
 			return false;
@@ -148,31 +151,57 @@ bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d)
 			const Vector2& ab = b - a;
 			const Vector2& ac = c - a;
 
-			d = Vector2(-ab.y(), ab.x());
-			if (d * c > 0)
+			Vector2 normal;
+
+			if (ab * ao >= 0)
 			{
-				d = d * -1;
+				normal = ab.normal(ao);
+
+				if (ac * normal >= 0)
+				{
+					normal = ac.normal(ao);
+
+					if (ab * normal >= 0)
+					{
+						return true;
+					}
+					else
+					{
+						simplex.erase(simplex.begin() + 1);
+						d = normal;
+					}
+				}
+				else
+				{
+					simplex.erase(simplex.begin());
+					d = normal;
+				}
+			}
+			else
+			{
+				if (ac * ao >= 0)
+				{
+					normal = ac.normal(ao);
+
+					if (ab * normal >= 0)
+					{
+						return true;
+					}
+					else
+					{
+						simplex.erase(simplex.begin() + 1);
+						d = normal;
+					}
+				}
+				else
+				{
+					simplex.erase(simplex.begin() + 1);
+					simplex.erase(simplex.begin());
+					d = ao;
+				}
 			}
 
-			if (d * ao > 0)
-			{
-				simplex.erase(simplex.begin());
-				return false;
-			}
-
-			d = Vector2(-ac.y(), ac.x());
-			if (d * b > 0)
-			{
-				d = d * -1;
-			}
-
-			if (d * ao > 0)
-			{
-				simplex.erase(simplex.begin() + 1);
-				return false;
-			}
-
-			return true;
+			return false;
 		}
 
 		default:
