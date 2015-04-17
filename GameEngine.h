@@ -9,7 +9,7 @@
 #endif
 #include <vector>
 
-#include "imagemanager.h"
+#include "ImageManager.h"
 
 class GameState;
 

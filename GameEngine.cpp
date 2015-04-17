@@ -1,7 +1,8 @@
-#include "gameengine.h"
-#include "gamestate.h"
+#include <cstdio>
+#include "GameEngine.h"
+#include "GameState.h"
 
-#include "menu.h"
+#include "MainMenu.h"
 
 // Static variables
 GameEngine* GameEngine::singleton = NULL;

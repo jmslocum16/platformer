@@ -1,7 +1,7 @@
 #ifndef __image_manager_h_
 #define __image_manager_h_
 
-#include "bitmap.h"
+#include "Bitmap.h"
 
 struct Image {
 	unsigned char* data;

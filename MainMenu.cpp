@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "MainMenu.h"
 
 // Static variables
 MainMenu* MainMenu::singleton = NULL;

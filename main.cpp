@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "gameengine.h"
+#include "GameEngine.h"
 
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char** argv) {

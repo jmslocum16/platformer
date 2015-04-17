@@ -1,4 +1,4 @@
-#include "imagemanager.h"
+#include "ImageManager.h"
 
 void loadImage(char* fname, Image& image) {
 	image.data = readBMP(fname, image.width, image.height);

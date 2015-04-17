@@ -4,7 +4,7 @@
 // handle MS bitmap I/O. For portability, we don't use the data structure defined in Windows.h
 //
 
-#include "bitmap.h"
+#include "Bitmap.h"
  
 #include <cstdio>
 #include <cstring>
