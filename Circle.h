@@ -4,24 +4,29 @@ class Circle : public ConvexShape
 
 private:
 
-	Vector2 center;
-	float radius;
+	Vector2 c;
+	float r;
 
 public:
 
 	Circle(const Vector2& center, float radius)
-	: center(center), radius(radius)
+	: c(center), r(radius)
 	{
+	}
+
+	float radius() const
+	{
+		return r;
 	}
 
 	Vector2 center() const
 	{
-		return center;
+		return c;
 	}
 
 	Vector2 getSupport(const Vector2& direction) const
 	{
 		Vector2 normalDir = direction.normalize();
-		return center + (normalDir * radius);
+		return c + (normalDir * r);
 	}
 };

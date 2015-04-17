@@ -2,6 +2,7 @@
 #include "ConvexShape.h"
 #include "ConvexPolygon.h"
 #include "Circle.h"
+#include "Capsule.h"
 
 #include <vector>
 
@@ -14,7 +15,7 @@ bool collides(const ConvexShape& a, const ConvexShape& b);
 
 ConvexShape* sweep(const Circle& c, const Vector2& v)
 {
-	return new Capsule(c.center, c.center + v, c.radius);
+	return new Capsule(c.center(), c.center() + v, c.radius());
 }
 
 ConvexShape* sweep(const ConvexPolygon& a, const Vector2& v)
