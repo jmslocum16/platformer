@@ -5,13 +5,45 @@
 #include "Capsule.h"
 
 #include <vector>
+#include <limits>
 
 #define EPSILON .000001f
 
+struct GJKOutput
+{
+	bool collision;
+	std::vector<Vector2> simplex;
+
+	GJKOutput()
+	: collision(false)
+	{
+	}
+};
+
+struct MinkowskiEdge
+{
+	float distance;
+	Vector2 normal;
+	int index;
+};
+
+struct CollisionOutput
+{
+	float hitFraction;
+	float depth;
+	Vector2 mtv;
+};
 
 Vector2 support(const ConvexShape& a, const ConvexShape& b, const Vector2& d);
 bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d);
-bool collides(const ConvexShape& a, const ConvexShape& b);
+GJKOutput collides(const ConvexShape& a, const ConvexShape& b);
+
+Vector2 tripleProduct(const Vector2& a, const Vector2& b, const Vector2& c)
+{
+	double ac = a.x() * c.x() + a.y() * c.y();
+	double bc = b.x() * c.x() + b.y() * c.y();
+	return Vector2(b.x() * ac - a.x() * bc, b.y() * ac - a.y() * bc);
+}
 
 ConvexShape* sweep(const Circle& c, const Vector2& v)
 {
@@ -49,13 +81,69 @@ ConvexShape* sweep(const ConvexShape& a, const Vector2& v)
 	return sweep(*c, v);
 }
 
-float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
+MinkowskiEdge findClosestEdge(const std::vector<Vector2>& simplex)
 {
+	MinkowskiEdge closest;
+
+	closest.distance = std::numeric_limits<float>::infinity();
+	for (int i = 0; i < simplex.size(); ++i)
+	{
+		int j = (i + 1) % simplex.size();
+
+		Vector2 a = simplex[i];
+		Vector2 b = simplex[j];
+
+		Vector2 e = b - a;
+		Vector2 oa = a;
+		// Vector2 n = tripleProduct(e, oa, e);
+		Vector2 n = e.left();
+		n = n.normalize();
+		float d = n * a;
+
+		if (d < closest.distance)
+		{
+			closest.distance = d;
+			closest.normal = n;
+			closest.index = j;
+		}
+	}
+
+	return closest;
+}
+
+void epa(const ConvexShape& a, const ConvexShape& b, const GJKOutput& gjkOut, CollisionOutput& co)
+{
+	std::vector<Vector2> simplex = gjkOut.simplex;
+
+	while (true)
+	{
+		MinkowskiEdge e = findClosestEdge(simplex);
+
+		Vector2 p = support(a, b, e.normal);
+		float d = p * e.normal;
+
+		if (d - e.distance < EPSILON)
+		{
+			co.mtv = e.normal;
+			co.depth = d;
+			return;
+		}
+		else
+		{
+			simplex.insert(simplex.begin() + e.index, p);
+		}
+	}
+}
+
+CollisionOutput collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
+{
+	CollisionOutput co;
 	ConvexShape* fullSweep = sweep(a, v);
 
-	if (!collides(*fullSweep, b))
+	if (!collides(*fullSweep, b).collision)
 	{
-		return -1.0;
+		co.hitFraction = -1.0f;
+		return co;
 	}
 
 	delete fullSweep;
@@ -63,15 +151,19 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 	float lo = 0.0f, hi = 1.0f, mid;
 	float best = 1.0f;
 
+	GJKOutput bestOutput;
+
 	while (lo <= hi && (hi - lo) > EPSILON)
 	{
 		mid = lo + (hi - lo) / 2;
 		ConvexShape* partialSweep = sweep(a, v * mid);
 
-		if (collides(*partialSweep, b))
+		GJKOutput output = collides(*partialSweep, b);
+		if (output.collision)
 		{
 			best = mid;
 			hi = mid;
+			bestOutput = output;
 		}
 		else
 		{
@@ -81,12 +173,19 @@ float collides(const ConvexShape& a, const Vector2& v, const ConvexShape& b)
 		delete partialSweep;
 	}
 
-	return best;
+	co.hitFraction = best;
+
+	ConvexShape* bestSweep = sweep(a, v * best);
+	epa(*bestSweep, b, bestOutput, co);
+	delete bestSweep;
+
+	return co;
 }
 
 
-bool collides(const ConvexShape& a, const ConvexShape& b)
+GJKOutput collides(const ConvexShape& a, const ConvexShape& b)
 {
+	GJKOutput out;
 	std::vector<Vector2> simplex;
 	Vector2 d(1, 1);
 
@@ -99,14 +198,17 @@ bool collides(const ConvexShape& a, const ConvexShape& b)
 
 		if (point * d < 0)
 		{
-			return false;
+			return out;
 		}
 
 		simplex.push_back(point);
 
 		if (containsOrigin(simplex, d))
 		{
-			return true;
+			out.collision = true;
+			out.simplex = simplex;
+
+			return out;
 		}
 	}
 }

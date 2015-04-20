@@ -14,25 +14,31 @@ int main()
 	Vector2 pts1[4] =
 	{
 		Vector2(0, 0),
-		Vector2(4, 0),
-		Vector2(4.6, 4.6),
 		Vector2(0, 4),
+		Vector2(4, 4),
+		Vector2(4, 0),
 	};
 
 	Vector2 pts2[4] =
 	{
-		Vector2(5, 5),
-		Vector2(15, 5),
-		Vector2(15, 15),
-		Vector2(5, 15),
+		Vector2(8, 0),
+		Vector2(8, 4),
+		Vector2(12, 4),
+		Vector2(12, 0),
 	};
 
 	ConvexPolygon a(pts1, 4);
+	// Circle a(Vector2(0, 0), 2);
 	ConvexPolygon b(pts2, 4);
+	// Circle b(Vector2(6, 6), 1);
 
-	Vector2 v = Vector2(10, 10);
+	Vector2 v = Vector2(10, 0);
 
-	cout << collides(a, b) << endl;
-	cout << collides(a, v, b) << endl;
+	cout << collides(a, b).collision << endl;
 
+	CollisionOutput co;
+	co = collides(a, v, b);
+	cout << co.hitFraction << " " << co.depth << " (" << co.mtv.x() << ", " << co.mtv.y() << ")" << endl;
 }
+
+// sqrt(2), sqrt(2)

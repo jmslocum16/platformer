@@ -113,6 +113,16 @@ public:
 		return Vector2(-j, i);
 	}
 
+	Vector2 left() const
+	{
+		return Vector2(j, -i);
+	}
+
+	Vector2 right() const
+	{
+		return Vector2(-j, i);
+	}
+
 	Vector2 normal(const Vector2& other) const
 	{
 		float ax_by = i * other.j;
