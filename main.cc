@@ -38,5 +38,5 @@ int main()
 
 	CollisionOutput co;
 	co = collides(a, v, b);
-	cout << co.hitFraction << " " << co.depth << " (" << co.mtv.x() << ", " << co.mtv.y() << ")" << endl;
+	cout << co.hitFraction << " " << co.depth << " (" << co.hitNormal.x() << ", " << co.hitNormal.y() << ")" << endl;
 }

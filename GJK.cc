@@ -31,7 +31,7 @@ struct CollisionOutput
 {
 	float hitFraction;
 	float depth;
-	Vector2 mtv;
+	Vector2 hitNormal;
 };
 
 Vector2 support(const ConvexShape& a, const ConvexShape& b, const Vector2& d);
@@ -124,7 +124,7 @@ void epa(const ConvexShape& a, const ConvexShape& b, const GJKOutput& gjkOut, Co
 
 		if (d - e.distance < EPSILON)
 		{
-			co.mtv = e.normal * -1;
+			co.hitNormal = e.normal * -1;
 			co.depth = d;
 			return;
 		}
