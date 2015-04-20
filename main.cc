@@ -27,12 +27,12 @@ int main()
 		Vector2(12, 0),
 	};
 
-	ConvexPolygon a(pts1, 4);
-	// Circle a(Vector2(0, 0), 2);
-	ConvexPolygon b(pts2, 4);
-	// Circle b(Vector2(6, 6), 1);
+	// ConvexPolygon a(pts1, 4);
+	Circle a(Vector2(1, 0), 2);
+	// ConvexPolygon b(pts2, 4);
+	Circle b(Vector2(0, 5), 1);
 
-	Vector2 v = Vector2(10, 0);
+	Vector2 v = Vector2(0, 10);
 
 	cout << collides(a, b).collision << endl;
 
@@ -40,5 +40,3 @@ int main()
 	co = collides(a, v, b);
 	cout << co.hitFraction << " " << co.depth << " (" << co.mtv.x() << ", " << co.mtv.y() << ")" << endl;
 }
-
-// sqrt(2), sqrt(2)
