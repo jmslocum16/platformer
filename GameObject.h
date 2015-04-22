@@ -8,12 +8,16 @@
 class GameObject
 {
 protected:
+public:
   Vector2 drawPoint;
   ConvexPolygon collisionObject;
   Vector2 forces;
   Vector2 velocity;
   Image* image;         // or animation?
-public:
+  GameObject()
+  {
+    
+  }
   virtual Image getImage() = 0;
   virtual void draw() = 0;
 };
@@ -26,8 +30,8 @@ public:
   virtual Image getImage() {
     return *image;
   }
-  virtual void draw();
-}
+  virtual void draw() {}
+};
 
 // For game objects with animations instead of images
 class AnimatedObject : public GameObject
@@ -35,11 +39,11 @@ class AnimatedObject : public GameObject
 protected:
   Animation* anim;
   int frame;
-public
+public:
   Image getImage() {
     return anim->images[frame % anim->numFrames];
-  }
-  public void draw();
+  };
+  void draw();
 };
 
 // Static objects
@@ -61,4 +65,11 @@ class Exit : public StaticObject
 
 class Player : public StaticObject
 {
+public:
+  Player(float x, float y)
+  {
+    drawPoint = Vector2(x,y);
+    Vector2 pts[3] = {Vector2(x,y), Vector2(x-1,y), Vector2(x,y-1)};
+    collisionObject = ConvexPolygon(pts, 3);
+  }
 };

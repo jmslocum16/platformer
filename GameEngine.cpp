@@ -1,7 +1,8 @@
 #include <cstdio>
 #include "GameEngine.h"
-#include "GameState.h"
+#include "LevelLoader.h"
 
+#include "GameState.h"
 #include "MainMenu.h"
 
 // Static variables
@@ -69,6 +70,7 @@ void GameEngine::Init() {
   // audio init
   // ... other init?
   m_running = true;
+  Simulator* s = loadLevel("levels/example.lev");
 }
 
 void GameEngine::Cleanup() {

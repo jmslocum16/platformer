@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ConvexPolygon.h"
-#include "ConvexHull.h"
 #include "Vector2.h"
+#include "GameObject.h"
 
 #include <vector>
 
@@ -13,5 +13,5 @@ public:
   // step physics
   void stepSimulation(float dt);
 
-  
+  void add(GameObject* obj);  
 };

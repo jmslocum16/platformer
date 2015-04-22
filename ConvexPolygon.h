@@ -1,6 +1,8 @@
 #pragma once
 
 #include "assert.h"
+#include "ConvexShape.h"
+#include "Vector2.h"
 
 class ConvexPolygon : public ConvexShape
 {
@@ -11,6 +13,11 @@ private:
 	int n;
 
 public:
+  ConvexPolygon()
+  {
+    pts = NULL;
+    n = 0;
+  }
 
 	ConvexPolygon(const Vector2* points, int numPoints)
 	: n(numPoints)
