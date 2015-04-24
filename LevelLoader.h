@@ -2,5 +2,6 @@
 
 #include "Simulator.h"
 #include "GameObject.h"
+#include "ActiveGame.h"
 
-Simulator* loadLevel(const char* filename);
+ActiveGame* loadLevel(const char* filename);

@@ -21,7 +21,7 @@ CC = g++
 .cpp.o: 
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $<
 
-PLATFORM.O = main.o ImageManager.o Bitmap.o GameEngine.o MainMenu.o LevelLoader.o Simulator.o
+PLATFORM.O = main.o ImageManager.o Bitmap.o GameObject.o GameEngine.o MainMenu.o ActiveGame.o LevelLoader.o Simulator.o
 TEST.O = test.o
 ALL.O = $(PLATFORM.O) $(TEST.O)
 

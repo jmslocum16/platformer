@@ -10,42 +10,44 @@ GameEngine* GameEngine::singleton = NULL;
 
 /*** Temporarily in GameEngine for testing purposes ***/
 // testing image functions
-void GameEngine::loadResources() {
+void GameEngine::loadResources()
+{
 	printf("loading resources\n");
 	loadImage("images/test.bmp", testImage);
 }
-
-// x and y in window coordinates, lower left corner of image to draw
-void GameEngine::drawImage(double x, double y, Image& i) {
-	double glX = -1.0 + 2.0*x/windowWidth;
-	double glY = -1.0 + 2.0*y/windowWidth;
-	glRasterPos2f(glX, glY);
-	glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
-}
 /***********************/
 
-void displayFunc() {
+void displayFunc()
+{
   GameEngine::getSingleton()->Draw();
 }
 
-void handleEvents(unsigned char key, int x, int y) {
+void handleEvents(unsigned char key, int x, int y)
+{
   GameEngine::getSingleton()->HandleEvents(key, x, y);
 }
 
-void GameEngine::Draw() {
+void GameEngine::Draw()
+{
 	glClear(GL_COLOR_BUFFER_BIT);   // Clear the color buffer with current clearing color
-	drawImage(320, 320, testImage);
 
-	if (Running()) {
+	if (Running())
+  {
 	  // Events 'handled' asynchronously; can be changed
 	  Update();
     states.back()->Draw(this);
+  }
+  else
+  {
+    glutDestroyWindow(windowid);
+    exit(0);
   }
 
 	glFlush();  // Render now
 }
 
-void GameEngine::Init() {
+void GameEngine::Init()
+{
   // GL init
   windowWidth = 640;
   windowHeight = 640;
@@ -58,6 +60,7 @@ void GameEngine::Init() {
 	glutInitWindowPosition(50, 50);
 	windowid = glutCreateWindow("Platformer");  // Create window with the given title
 	glutDisplayFunc(displayFunc);       // Register callback handler for window re-paint event
+	glutIdleFunc(displayFunc);          // Register callback handler for window idle
 	glutKeyboardFunc(handleEvents);
 
   // our GL init
@@ -66,36 +69,45 @@ void GameEngine::Init() {
   // game state init
   MainMenu::getSingleton()->Init();
 
-  ChangeState((GameState*)MainMenu::getSingleton());
+  // level loading:
+  ActiveGame* level = loadLevel("levels/example.lev");
+
+  ChangeState((GameState*)level);
   // audio init
   // ... other init?
   m_running = true;
-  Simulator* s = loadLevel("levels/example.lev");
 }
 
-void GameEngine::Cleanup() {
+void GameEngine::Cleanup()
+{
   // game state cleanup
+  MainMenu::getSingleton()->Cleanup();
   // audio cleanup
   // ... other cleanup?
 }
 
-void GameEngine::ChangeState(GameState* state) {
+void GameEngine::ChangeState(GameState* state)
+{
   if (states.size() > 0)
     PopState();
   PushState(state);
 }
 
-void GameEngine::PushState(GameState* state) {
+void GameEngine::PushState(GameState* state)
+{
   states.push_back(state);
 }
 
-void GameEngine::PopState() {
+void GameEngine::PopState()
+{
   states.pop_back();
 }
 
-void GameEngine::HandleEvents(unsigned char key, int x, int y) {
+void GameEngine::HandleEvents(unsigned char key, int x, int y)
+{
   states.back()->HandleEvents(this, key, x, y);
-  switch (key) {
+  switch (key)
+  {
       case 'w':
           printf("w pressed!\n");
           break;
@@ -105,15 +117,10 @@ void GameEngine::HandleEvents(unsigned char key, int x, int y) {
       case 'd':
           printf("d pressed!\n");
           break;
-      case 27:
-          if (windowid) {
-              glutDestroyWindow(windowid);
-              exit(0);
-          }
-          break;
   }
 }
 
-void GameEngine::Update() {
+void GameEngine::Update()
+{
   states.back()->Update(this);
 }

@@ -1,11 +1,15 @@
 #include "LevelLoader.h"
+#include "ImageManager.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
-Simulator* loadLevel(const char* filename) {
+ActiveGame* loadLevel(const char* filename) {
+  ActiveGame* level = new ActiveGame();
   Simulator* sim = new Simulator();
+  level->Init();
+  level->setLevelSimulator(sim);
   
   ifstream file (filename);
   if (file.is_open())
@@ -17,15 +21,19 @@ Simulator* loadLevel(const char* filename) {
     file >> playerX;
     file >> playerY;
     Player* p = new Player(playerX, playerY);
-    sim->add(p);
-    long numWalls = atoi(line.c_str());
-    /*while (getline(file, line))
+    level->add(p);
+    long numWalls;
+    file >> numWalls;
+    for (int i = 0; i < numWalls; i++)
     {
-      
-    }*/
+      float p1x, p1y, p2x, p2y;
+      file >> p1x; file >> p1y; file >> p2x; file >> p2y;
+      Wall* w = new Wall(p1x, p1y, p2x, p2y);
+      level->add(w);
+    }
     file.close();
   }
 
 
-  return sim;
+  return level;
 }

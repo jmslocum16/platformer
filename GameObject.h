@@ -27,10 +27,11 @@ class StaticObject : public GameObject
 protected:
   Image* image;         // or animation?
 public:
-  virtual Image getImage() {
+  virtual Image getImage()
+  {
     return *image;
   }
-  virtual void draw() {}
+  virtual void draw();
 };
 
 // For game objects with animations instead of images
@@ -40,8 +41,9 @@ protected:
   Animation* anim;
   int frame;
 public:
-  Image getImage() {
-    return anim->images[frame % anim->numFrames];
+  Image getImage()
+  {
+    return anim->images[frame++ % anim->numFrames];
   };
   void draw();
 };
@@ -50,11 +52,15 @@ public:
 
 class Wall : public StaticObject
 {
-  Vector2* pts;         // for recovering angle in case we can draw image 
+  Vector2* pts;         // for recovering angle in case we can draw image?
 public:
-  Image getImage() {
-    return *image;
+  Wall(float x1, float y1, float x2, float y2)
+  {
+    pts = new Vector2[2];
+    pts[0] = Vector2(x1, y1);
+    pts[1] = Vector2(x2, y2);
   }
+  void draw();
 };
 
 class Exit : public StaticObject
@@ -65,11 +71,15 @@ class Exit : public StaticObject
 
 class Player : public StaticObject
 {
+private:
+  static char* file;
 public:
   Player(float x, float y)
   {
     drawPoint = Vector2(x,y);
     Vector2 pts[3] = {Vector2(x,y), Vector2(x-1,y), Vector2(x,y-1)};
     collisionObject = ConvexPolygon(pts, 3);
+    image = new Image();
+    loadImage(file, *image);
   }
 };

@@ -1,7 +1,8 @@
 #pragma once
 #include "GameState.h"
 
-class MainMenu : public GameState {
+class MainMenu : public GameState
+{
 public:
   void Init();
   void Cleanup();
@@ -13,7 +14,8 @@ public:
   void Update(GameEngine* game);
   void Draw(GameEngine* game);
 
-  static MainMenu* getSingleton() {
+  static MainMenu* getSingleton()
+  {
     if (!singleton)
       singleton = new MainMenu();
     return singleton;
