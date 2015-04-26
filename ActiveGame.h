@@ -30,4 +30,5 @@ private:
   bool paused;
   int max_portals;
   int num_portals;
+  long double lastUpdate; // time in miliseconds of last update (time relative to glutInit call)
 };

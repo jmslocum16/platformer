@@ -1,8 +1,11 @@
 #include "ActiveGame.h"
 
+#include <iostream>
+
 void ActiveGame::Init()
 {
   objects = vector<GameObject*>();
+  lastUpdate = glutGet(GLUT_ELAPSED_TIME);
 }
 
 void ActiveGame::Cleanup()
@@ -32,7 +35,16 @@ void ActiveGame::HandleEvents(GameEngine* game, unsigned char key, int x, int y)
 
 void ActiveGame::Update(GameEngine* game)
 {
-
+  // update simulation
+  static long count = 0;
+  float dt = (glutGet(GLUT_ELAPSED_TIME) - lastUpdate) / 1000.0;
+  sim->stepSimulation(dt);
+  lastUpdate += dt * 1000;
+  /*if (++count > 60)
+  {
+    cout << "dt " << dt << " ELAPSED " << glutGet(GLUT_ELAPSED_TIME) << endl;
+    count = 0;
+  }*/
 }
 
 void ActiveGame::Draw(GameEngine* game)
