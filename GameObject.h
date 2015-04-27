@@ -72,14 +72,18 @@ class Exit : public StaticObject
 class Player : public StaticObject
 {
 private:
-  static char* file;
+  static char* default_file;
 public:
-  Player(float x, float y)
+  Player(float x, float y, char* file = NULL)
   {
     drawPoint = Vector2(x,y);
-    Vector2 pts[3] = {Vector2(x,y), Vector2(x-1,y), Vector2(x,y-1)};
-    collisionObject = ConvexPolygon(pts, 3);
+    Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+1), Vector2(x+1,y+1), Vector2(x+1, y)};
+    collisionObject = ConvexPolygon(pts, 4);
     image = new Image();
-    loadImage(file, *image);
+    if (file)
+      loadImage(file, *image);
+    else
+      loadImage(default_file, *image);
   }
+  void draw();
 };

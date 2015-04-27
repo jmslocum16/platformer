@@ -16,11 +16,12 @@ ActiveGame* loadLevel(const char* filename) {
   {
     string line;
     getline(file, line); // level name
+    getline(file, line); // player image file
     float playerX;
     float playerY;
     file >> playerX;
     file >> playerY;
-    Player* p = new Player(playerX, playerY);
+    Player* p = new Player(playerX, playerY, &line[0]); // strip newline?
     level->add(p);
     long numWalls;
     file >> numWalls;
