@@ -9,13 +9,23 @@ class ConvexShape;
 class GameObject
 {
 protected:
+public:
   Vector2 drawPoint;
   ConvexShape* collisionObject;
   Vector2 forces;
   Vector2 velocity;
+<<<<<<< HEAD
 public:
+=======
+  Image* image;         // or animation?
+  GameObject()
+  {
+    
+  }
+>>>>>>> a727f9ff1fe055fa8702551dd20a4c4230ff16e1
   virtual Image getImage() = 0;
   virtual void draw() = 0;
+  virtual void move(float dt) = 0;
 };
 
 class StaticObject : public GameObject
@@ -23,7 +33,8 @@ class StaticObject : public GameObject
 protected:
   Image* image;         // or animation?
 public:
-  virtual Image getImage() {
+  virtual Image getImage()
+  {
     return *image;
   }
   virtual void draw();
@@ -35,22 +46,23 @@ class AnimatedObject : public GameObject
 protected:
   Animation* anim;
   int frame;
-public
-  Image getImage() {
-    return anim->images[frame % anim->numFrames];
-  }
-  public void draw();
+public:
+  Image getImage()
+  {
+    return anim->images[frame++ % anim->numFrames];
+  };
+  void draw();
 };
 
 // Static objects
 
 class Wall : public StaticObject
 {
-  Vector2* pts;         // for recovering angle in case we can draw image 
+  Vector2* pts;         // for recovering angle in case we can draw image?
 public:
-  Image getImage() {
-    return *image;
-  }
+  Wall(float x1, float y1, float x2, float y2);
+  void draw();
+  void move(float dt) {}
 };
 
 class Exit : public StaticObject
@@ -61,4 +73,10 @@ class Exit : public StaticObject
 
 class Player : public StaticObject
 {
+private:
+  static char* default_file;
+public:
+  Player(float x, float y, float w, float h, char* file = NULL);
+  void draw();
+  void move(float dt);
 };

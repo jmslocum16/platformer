@@ -1,16 +1,22 @@
 #pragma once
 
 #include "assert.h"
+#include "ConvexShape.h"
+#include "Vector2.h"
 
 class ConvexPolygon : public ConvexShape
 {
 
-private:
 	
-	Vector2* pts;
-	int n;
 
 public:
+	Vector2* pts;
+	int n;
+  ConvexPolygon()
+  {
+    pts = NULL;
+    n = 0;
+  }
 
 	ConvexPolygon(const Vector2* points, int numPoints)
 	: n(numPoints)
@@ -23,6 +29,14 @@ public:
 			pts[i] = points[i];
 		}
 	}
+
+  void move(Vector2 dir)
+  {
+    for (int i = 0; i < n; i++)
+    {
+      pts[i] = pts[i] + dir;
+    }
+  }
 
 	int numPoints() const
 	{

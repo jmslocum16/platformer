@@ -21,11 +21,16 @@ CC = g++
 .cpp.o: 
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $<
 
-ALL.O = main.o ImageManager.o Bitmap.o GameEngine.o MainMenu.o
+PLATFORM.O = main.o ImageManager.o Bitmap.o GameObject.o GameEngine.o MainMenu.o ActiveGame.o LevelLoader.o Simulator.o
+TEST.O = test.o
+ALL.O = $(PLATFORM.O) $(TEST.O)
 
-platform: $(ALL.O)
-	$(CC) $(CFLAGS) -o $@ $(ALL.O) $(INCLUDE) $(LIBDIR) $(LIBS)
+platform: $(PLATFORM.O)
+	$(CC) $(CFLAGS) -o $@ $(PLATFORM.O) $(INCLUDE) $(LIBDIR) $(LIBS)
+
+test: test.o
+	$(CC) $(CFLAGS) -o $@ test.o $(INCLUDE) $(LIBDIR) $(LIBS)
 
 clean:
-	rm -f *.o platform
+	rm -f *.o platform test
 

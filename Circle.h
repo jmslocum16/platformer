@@ -14,6 +14,11 @@ public:
 	{
 	}
 
+  void move(Vector2 dir)
+  {
+    c = c + dir;
+  }
+
 	float radius() const
 	{
 		return r;

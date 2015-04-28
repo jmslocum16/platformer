@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 
 class Vector2
@@ -101,6 +103,11 @@ public:
 	float lengthSq() const
 	{
 		return i * i + j * j;
+	}
+
+	float length() const
+	{
+    return sqrt(lengthSq());
 	}
 
 	Vector2 normalize() const

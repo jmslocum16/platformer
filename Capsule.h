@@ -14,6 +14,12 @@ public:
 	{
 	}
 
+  void move(Vector2 dir)
+  {
+    centerA = centerA + dir;
+    centerB = centerB + dir;
+  }
+
 	Vector2 getSupport(const Vector2& direction) const
 	{
 		Vector2 normalDir = direction.normalize();
