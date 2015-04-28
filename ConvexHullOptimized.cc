@@ -66,7 +66,7 @@ void convexHull(const Vector2* pts, int n, std::vector<Vector2>& hull)
 		}
 	}
 
-	std::sort(points.begin(), points.end());
+	std::sort(points.begin(), points.end(), compare);
 
 	hull.push_back(pts[index]);
 	hull.push_back(points[0]);
