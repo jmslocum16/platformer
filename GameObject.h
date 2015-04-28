@@ -3,16 +3,16 @@
 #include <vector>
 #include "Vector2.h"
 #include "ImageManager.h"
-#include "ConvexPolygon.h"
+
+class ConvexShape;
 
 class GameObject
 {
 protected:
   Vector2 drawPoint;
-  ConvexPolygon collisionObject;
+  ConvexShape* collisionObject;
   Vector2 forces;
   Vector2 velocity;
-  Image* image;         // or animation?
 public:
   virtual Image getImage() = 0;
   virtual void draw() = 0;
@@ -27,7 +27,7 @@ public:
     return *image;
   }
   virtual void draw();
-}
+};
 
 // For game objects with animations instead of images
 class AnimatedObject : public GameObject
