@@ -137,4 +137,14 @@ public:
 
 		return Vector2(j * (ay_bx - ax_by), i * (ax_by - ay_bx));
 	}
+
+	bool operator<(const Vector2& other) const
+	{
+		if (i != other.i)
+		{
+			return i <= other.i;
+		}
+
+		return j <= other.j;
+	}
 };
