@@ -36,6 +36,9 @@ public:
     return singleton;
   }
 
+  int windowWidth;
+  int windowHeight;
+
 private:
   void drawImage(double x, double y, Image& i);
   void loadResources();
@@ -45,8 +48,6 @@ private:
 
   std::vector<GameState*> states;
   int windowid;
-  int windowWidth;
-  int windowHeight;
 
   Image testImage;
 

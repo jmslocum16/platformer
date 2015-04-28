@@ -109,13 +109,10 @@ void GameEngine::HandleEvents(unsigned char key, int x, int y)
   switch (key)
   {
       case 'w':
-          printf("w pressed!\n");
           break;
       case 'a':
-          printf("a pressed!\n");
           break;
       case 'd':
-          printf("d pressed!\n");
           break;
   }
 }

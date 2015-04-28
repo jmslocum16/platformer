@@ -13,7 +13,7 @@ int main()
 {
 	testVector2();
 
-	Vector2 pts1[4] =
+	Vector2 pts2[4] =
 	{
 		Vector2(-1.0, -1.0 - EPS),
 		Vector2(-1.0, -1.0 + EPS),
@@ -27,7 +27,7 @@ int main()
 		Vector2(4, 0),
 	};*/
 
-	Vector2 pts2[4] =
+	Vector2 pts1[4] =
 	{
 		Vector2(-0.95, -0.95),
 		Vector2(-0.95, -0.85),

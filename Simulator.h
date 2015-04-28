@@ -8,10 +8,18 @@
 
 using namespace std;
 
+typedef vector<GameObject*> Objects;
+
 class Simulator {
 public:
   // step physics
   void stepSimulation(float dt);
 
-  void add(GameObject* obj);  
+  void add(GameObject* obj);
+  void addStatic(GameObject* obj);
+  void addDynamic(GameObject* obj);
+
+  Objects statics;
+  Objects dynamics;
+  Objects all;
 };

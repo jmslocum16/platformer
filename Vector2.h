@@ -105,6 +105,11 @@ public:
 		return i * i + j * j;
 	}
 
+	float length() const
+	{
+    return sqrt(lengthSq());
+	}
+
 	Vector2 normalize() const
 	{
 		return *this / sqrt(lengthSq());

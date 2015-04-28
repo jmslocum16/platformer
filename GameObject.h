@@ -10,7 +10,7 @@ class GameObject
 protected:
 public:
   Vector2 drawPoint;
-  ConvexPolygon collisionObject;
+  ConvexShape* collisionObject;
   Vector2 forces;
   Vector2 velocity;
   Image* image;         // or animation?
@@ -20,6 +20,7 @@ public:
   }
   virtual Image getImage() = 0;
   virtual void draw() = 0;
+  virtual void move(float dt) = 0;
 };
 
 class StaticObject : public GameObject
@@ -54,13 +55,9 @@ class Wall : public StaticObject
 {
   Vector2* pts;         // for recovering angle in case we can draw image?
 public:
-  Wall(float x1, float y1, float x2, float y2)
-  {
-    pts = new Vector2[2];
-    pts[0] = Vector2(x1, y1);
-    pts[1] = Vector2(x2, y2);
-  }
+  Wall(float x1, float y1, float x2, float y2);
   void draw();
+  void move(float dt) {}
 };
 
 class Exit : public StaticObject
@@ -74,16 +71,7 @@ class Player : public StaticObject
 private:
   static char* default_file;
 public:
-  Player(float x, float y, char* file = NULL)
-  {
-    drawPoint = Vector2(x,y);
-    Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+1), Vector2(x+1,y+1), Vector2(x+1, y)};
-    collisionObject = ConvexPolygon(pts, 4);
-    image = new Image();
-    if (file)
-      loadImage(file, *image);
-    else
-      loadImage(default_file, *image);
-  }
+  Player(float x, float y, float w, float h, char* file = NULL);
   void draw();
+  void move(float dt);
 };

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <vector>
+#include "Util.h"
 
 int orientation(const Vector2& p, const Vector2& q, const Vector2& r)
 {
 	float value = (q.y() - p.y()) * (r.x() - q.x()) - (q.x() - p.x()) * (r.y() - q.y());
-
-	if (value == 0)
+	if (abs(value) < 1e-6)
 	{
 		return 0;
 	}
@@ -28,29 +27,34 @@ void convexHull(const Vector2* points, int n, std::vector<Vector2>& result)
 	}
 
 	int best = 0;
-	for (int i = 1; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
-		if (points[i].x() < points[best].x())
+		if (points[i].x() < points[best].x() || (points[i].x() == points[best].x() && points[i].y() < points[best].y()))
 		{
 			best = i;
 		}
 	}
-
 	int p = best, q;
 	do
 	{
 		q = (p + 1) % n;
-
 		for (int i = 0; i < n; ++i)
 		{
-			if (orientation(points[p], points[i], points[q]) == 2)
+		  int v = orientation(points[p], points[i], points[q]);
+			if (v == 2)
 			{
 				q = i;
 			}
+			else if (v == 0)
+			{
+			  if ((points[p] - points[i]).length() > (points[p] - points[q]).length())
+			  {
+				  q = i;
+				}
+			}
 		}
-
 		result.push_back(points[q]);
 		p = q;
 	}
-	while (p != best);
+	while (p != best && n != result.size());
 }

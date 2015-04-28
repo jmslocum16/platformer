@@ -20,10 +20,13 @@ public:
 
   void setLevelSimulator(Simulator* s) { sim = s; }
   void setMaxPortals(int n) { max_portals = n; }
-  void add(GameObject* obj);
+  void setPlayer(Player* p) { player = p; }
 
+  void addStatic(GameObject* obj);
+  void addDynamic(GameObject* obj);
 private:
   vector<GameObject*> objects;
+  Player* player;
   Simulator* sim;
   bool exit_reached;
   bool restart;
