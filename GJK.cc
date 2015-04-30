@@ -9,9 +9,6 @@
 #include <iostream>
 using namespace std;
 
-
-#define EPSILON .000001f
-
 struct GJKOutput
 {
 	bool collision;

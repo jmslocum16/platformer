@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#define EPSILON .000001f
+
 class Vector2
 {
 
@@ -10,6 +12,7 @@ private:
 	float i, j;
 
 public:
+
 	Vector2()
 	: i(0), j(0)
 	{}

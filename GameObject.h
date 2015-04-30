@@ -14,18 +14,16 @@ public:
   ConvexShape* collisionObject;
   Vector2 forces;
   Vector2 velocity;
-<<<<<<< HEAD
 public:
-=======
-  Image* image;         // or animation?
   GameObject()
   {
     
   }
->>>>>>> a727f9ff1fe055fa8702551dd20a4c4230ff16e1
   virtual Image getImage() = 0;
   virtual void draw() = 0;
   virtual void move(float dt) = 0;
+  virtual void applyForces() = 0;
+  virtual void collision(Vector2 normal) = 0;
 };
 
 class StaticObject : public GameObject
@@ -63,20 +61,41 @@ public:
   Wall(float x1, float y1, float x2, float y2);
   void draw();
   void move(float dt) {}
+  void applyForces() {}
+  void collision(Vector2 n) {}
 };
 
 class Exit : public StaticObject
 {
+  void collision(Vector2 n) {}
+  void applyForces() {}
 };
 
 // Dynamic objects
+
+enum PlayerState
+{
+  Falling=0,
+  Ground,
+  Goal
+};
 
 class Player : public StaticObject
 {
 private:
   static char* default_file;
+
+  PlayerState state;
+  Vector2 groundSlope;
 public:
   Player(float x, float y, float w, float h, char* file = NULL);
   void draw();
+  void applyForces();
   void move(float dt);
+  void jump();
+  void left();
+  void right();
+  bool changeState(PlayerState s);
+  bool checkState(PlayerState s) { return state == s; }
+  void collision(Vector2 normal);
 };

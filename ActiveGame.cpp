@@ -28,13 +28,13 @@ void ActiveGame::HandleEvents(GameEngine* game, unsigned char key, int x, int y)
     switch (key)
     {
         case 'w':
-            player->forces = player->forces + Vector2(0, 5);
+            player->jump();
             break;
         case 'a':
-            player->forces = player->forces + Vector2(-5, 0);
+            player->left();
             break;
         case 'd':
-            player->forces = player->forces + Vector2(5, 0);
+            player->right();
             break;
         case 27:
             GameEngine::getSingleton()->Quit();

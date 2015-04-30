@@ -15,7 +15,6 @@ public:
   // step physics
   void stepSimulation(float dt);
 
-  void add(GameObject* obj);
   void addStatic(GameObject* obj);
   void addDynamic(GameObject* obj);
 

@@ -6,7 +6,7 @@
 #include <sstream>
 using namespace std;
 
-string printVector(Vector2 v)
+static string printVector(Vector2 v)
 {
   stringstream s;
   s << "x: ";
