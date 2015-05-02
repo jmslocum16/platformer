@@ -23,14 +23,26 @@ void MainMenu::Resume()
 
 }
 
-void MainMenu::HandleEvents(GameEngine* game, unsigned char key, int x, int y)
+void MainMenu::HandleEvents(GameEngine* game)
 {
-    switch (key)
+    // do not advance these iterators
+    MouseInput::iterator mouseEnd = game->mouseInput.end();
+    KeyInput::iterator keyEnd = game->keyInput.end();
+
+
+    for (KeyInput::iterator iter = game->keyInput.begin(); iter != keyEnd; ++iter)
     {
-        case 27:
-            GameEngine::getSingleton()->Quit();
-            break;
+        KeyEvent e = *iter;
+        switch (e.key)
+        {
+            case 27:
+                GameEngine::getSingleton()->Quit();
+                break;
+        }
     }
+
+    game->mouseInput.erase(game->mouseInput.begin(), mouseEnd);
+    game->keyInput.erase(game->keyInput.begin(), keyEnd);
 }
 
 void MainMenu::Update(GameEngine* game)

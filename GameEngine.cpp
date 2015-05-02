@@ -8,23 +8,29 @@
 // Static variables
 GameEngine* GameEngine::singleton = NULL;
 
-/*** Temporarily in GameEngine for testing purposes ***/
-// testing image functions
-void GameEngine::loadResources()
+void mouseFunc(int button, int state, int x, int y)
 {
-	printf("loading resources\n");
-	loadImage("images/test.bmp", testImage);
+  MouseEvent e;
+  e.button = button;
+  e.state = state;
+  e.x = x;
+  e.y = y;
+  e.modifierState = glutGetModifiers();
+  GameEngine::getSingleton()->mouseInput.push_back(e);
 }
-/***********************/
 
 void displayFunc()
 {
   GameEngine::getSingleton()->Draw();
 }
 
-void handleEvents(unsigned char key, int x, int y)
+void keyboardFunc(unsigned char key, int x, int y)
 {
-  GameEngine::getSingleton()->HandleEvents(key, x, y);
+  KeyEvent e;
+  e.key = key;
+  e.x = x;
+  e.y = y;
+  GameEngine::getSingleton()->keyInput.push_back(e);
 }
 
 void GameEngine::Draw()
@@ -54,14 +60,13 @@ void GameEngine::Init()
 
   windowid = 0;
 
-	loadResources();
-
 	glutInitWindowSize(windowWidth, windowHeight);   // Set the window's initial width & height
 	glutInitWindowPosition(50, 50);
 	windowid = glutCreateWindow("Platformer");  // Create window with the given title
 	glutDisplayFunc(displayFunc);       // Register callback handler for window re-paint event
 	glutIdleFunc(displayFunc);          // Register callback handler for window idle
-	glutKeyboardFunc(handleEvents);
+	glutKeyboardFunc(keyboardFunc);
+	glutMouseFunc(mouseFunc);
 
   // our GL init
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black and opaque
@@ -103,21 +108,13 @@ void GameEngine::PopState()
   states.pop_back();
 }
 
-void GameEngine::HandleEvents(unsigned char key, int x, int y)
+void GameEngine::HandleEvents()
 {
-  states.back()->HandleEvents(this, key, x, y);
-  switch (key)
-  {
-      case 'w':
-          break;
-      case 'a':
-          break;
-      case 'd':
-          break;
-  }
+  states.back()->HandleEvents(this);
 }
 
 void GameEngine::Update()
 {
+  HandleEvents();
   states.back()->Update(this);
 }

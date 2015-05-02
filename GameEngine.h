@@ -13,6 +13,25 @@
 
 class GameState;
 
+struct MouseEvent
+{
+  int modifierState; // shift, ctrl, alt
+  int state; // up or down
+  int button;
+  int x;
+  int y;
+};
+
+struct KeyEvent
+{
+  char key;
+  int x;
+  int y;
+};
+
+typedef std::vector<MouseEvent> MouseInput;
+typedef std::vector<KeyEvent> KeyInput;
+
 class GameEngine
 {
 public:
@@ -23,7 +42,7 @@ public:
   void PushState(GameState* state);
   void PopState();
 
-  void HandleEvents(unsigned char key, int x, int y);
+  void HandleEvents();
   void Update();
   void Draw();
 
@@ -39,10 +58,9 @@ public:
   int windowWidth;
   int windowHeight;
 
+  MouseInput mouseInput;
+  KeyInput keyInput;
 private:
-  void drawImage(double x, double y, Image& i);
-  void loadResources();
-
   // the stack of states
   static GameEngine* singleton;
 

@@ -23,23 +23,46 @@ void ActiveGame::Resume()
   paused = false;
 }
 
-void ActiveGame::HandleEvents(GameEngine* game, unsigned char key, int x, int y)
+void ActiveGame::HandleEvents(GameEngine* game)
 {
-    switch (key)
+    // do not advance these iterators
+    MouseInput::iterator mouseEnd = game->mouseInput.end();
+    KeyInput::iterator keyEnd = game->keyInput.end();
+
+    for (MouseInput::iterator iter = game->mouseInput.begin(); iter != mouseEnd; ++iter)
     {
-        case 'w':
-            player->jump();
-            break;
-        case 'a':
-            player->left();
-            break;
-        case 'd':
-            player->right();
-            break;
-        case 27:
-            GameEngine::getSingleton()->Quit();
-            break;
+        MouseEvent e = *iter;
+        if (e.state == GLUT_DOWN)
+        {
+        cout << "X: " << e.x << " Y: " << e.y << endl;
+        float x = (2*(float) e.x / game->windowWidth) - 1.0;
+        float y = (2*(float) (game->windowHeight - e.y) / game->windowHeight) - 1.0;
+        cout << "Screen x,y: " << x << "," << y << endl;
+        }
     }
+
+    for (KeyInput::iterator iter = game->keyInput.begin(); iter != keyEnd; ++iter)
+    {
+        KeyEvent e = *iter;
+        switch (e.key)
+        {
+            case 'w':
+                player->jump();
+                break;
+            case 'a':
+                player->left();
+                break;
+            case 'd':
+                player->right();
+                break;
+            case 27:
+                GameEngine::getSingleton()->Quit();
+                break;
+        }
+    }
+
+    game->mouseInput.erase(game->mouseInput.begin(), mouseEnd);
+    game->keyInput.erase(game->keyInput.begin(), keyEnd);
 }
 
 void ActiveGame::Update(GameEngine* game)

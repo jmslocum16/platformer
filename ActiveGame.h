@@ -14,7 +14,7 @@ public:
   void Pause();
   void Resume();
 
-  void HandleEvents(GameEngine* game, unsigned char key, int x, int y);
+  void HandleEvents(GameEngine* game);
   void Update(GameEngine* game);
   void Draw(GameEngine* game);
 
