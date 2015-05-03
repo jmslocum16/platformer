@@ -84,3 +84,23 @@ void Simulator::addDynamic(GameObject* obj)
   dynamics.push_back(obj);
   all.push_back(obj);
 }
+
+void Simulator::removeStatic(GameObject* obj) {
+  std::vector<GameObject*>::iterator pos = std::find(statics.begin(), statics.end(), obj);
+  if (pos != statics.end())
+    statics.erase(pos);
+
+  pos = std::find(all.begin(), all.end(), obj);
+  if (pos != all.end())
+    all.erase(pos);
+}
+
+void Simulator::removeDynamic(GameObject* obj) {
+  std::vector<GameObject*>::iterator pos = std::find(dynamics.begin(), dynamics.end(), obj);
+  if (pos != dynamics.end())
+    dynamics.erase(pos);
+
+  pos = std::find(all.begin(), all.end(), obj);
+  if (pos != all.end())
+    all.erase(pos);
+}

@@ -108,6 +108,12 @@ void GameEngine::PopState()
   states.pop_back();
 }
 
+GameState* GameEngine::getCurrentState() {
+  if (states.size() == 0)
+    return NULL;
+  return states.back();
+}
+
 void GameEngine::HandleEvents()
 {
   states.back()->HandleEvents(this);

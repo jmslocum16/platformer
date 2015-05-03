@@ -97,3 +97,29 @@ void ActiveGame::addDynamic(GameObject* obj)
   objects.push_back(obj);
   sim->addDynamic(obj);
 }
+
+void ActiveGame::removeObject(GameObject* obj) {
+  vector<GameObject*>::iterator position = find(objects.begin(), objects.end(), obj);
+  if (position != objects.end())
+    objects.erase(position);
+}
+
+void ActiveGame::removeStatic(GameObject* obj) {
+  removeObject(obj);
+  sim->removeStatic(obj);
+}
+
+void ActiveGame::removeDynamic(GameObject* obj) {
+  removeObject(obj);
+  sim->removeStatic(obj);
+}
+
+void ActiveGame::addGravityWell(GravityWell* well) {
+  if (wells.size() == max_wells) {
+    vector<GravityWell*>::iterator first = wells.begin();
+    wells.erase(first);
+	delete *first;
+  }
+  wells.push_back(well);    
+}
+

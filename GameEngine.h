@@ -41,6 +41,7 @@ public:
   void ChangeState(GameState* state);
   void PushState(GameState* state);
   void PopState();
+  GameState* getCurrentState();
 
   void HandleEvents();
   void Update();

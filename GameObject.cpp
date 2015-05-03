@@ -2,6 +2,7 @@
 #include "GameEngine.h"
 #include "Util.h"
 #include "ConvexPolygon.h"
+#include "ActiveGame.h"
 
 #include <iostream>
 #include <string>
@@ -37,6 +38,11 @@ void StaticObject::draw()
   Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
 	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+}
+
+Vector2* StaticObject::getCenter() {
+  Image i = getImage();
+  return new Vector2(drawPoint.x() + i.width/2, drawPoint.y() + i.height/2);
 }
 
 void AnimatedObject::draw()
@@ -77,13 +83,13 @@ void Player::loadAnimations()
     &(walk_file + r + itoa(6) + e)[0],
     &(walk_file + r + itoa(7) + e)[0]
   };
-  /*for (int i = 0; i < num_walk; i++)
-  {
-    walkLeftImages[i] = &(walk_file + l + itoa(i) + e)[0];
-    walkRightImages[i] = &(walk_file + r + itoa(i) + e)[0];
-  }*/
   loadAnimation(num_walk, walkLeftImages, walkLeft);
   loadAnimation(num_walk, walkRightImages, walkRight);
+}
+
+Vector2* AnimatedObject::getCenter() {
+  Image i = anim->images[frame % anim->numFrames];
+  return new Vector2(drawPoint.x() + i.width/2, drawPoint.y() + i.height/2);
 }
 
 Player::Player(float x, float y, float width, float height)
@@ -106,9 +112,31 @@ void Player::applyForces()
   switch (state)
   {
     case SingleJump:
-    case DoubleJump:
+    case DoubleJump: {
       forces = forces + Vector2(0,-1.5); // apply gravity if falling
-      break;
+      Vector2* center = getCenter();
+
+      GameEngine* ge = GameEngine::getSingleton();
+      ActiveGame* state = (ActiveGame*)(ge->getCurrentState());
+      vector<GravityWell*> wells = state->getWells();
+      for(vector<GravityWell*>::iterator it = wells.begin(); it != wells.end(); it++) {
+        GravityWell* well = *it;
+        Vector2* wellCenter = well->getCenter();
+        Vector2 dif = *center - *wellCenter;
+        if (well->isPositive()) {
+          dif = Vector2(-dif.x(), -dif.y());
+        }
+        Vector2 result = dif.normalize();
+        double len = dif.length();
+        if (dif.length() < .1) {
+          len = .1;
+        }
+        result = result / (len * 10);
+        forces = forces + result;
+        delete wellCenter;
+      }
+      delete center;
+      break; }
     case Ground:
       forces = forces + velocity * -0.95;
     default:
@@ -292,3 +320,9 @@ void Wall::draw()
   }
   glEnd();
 }
+
+GravityWell::GravityWell(bool pos) {
+  positive = pos;
+}
+
+// TODO override gravitywell's getimage to return a different one based on being positive or negative

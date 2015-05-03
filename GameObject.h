@@ -24,6 +24,7 @@ public:
   virtual void move(float dt) = 0;
   virtual void applyForces() = 0;
   virtual void collision(Vector2 normal) = 0;
+  virtual Vector2* getCenter() = 0;
 };
 
 class StaticObject : public GameObject
@@ -36,6 +37,7 @@ public:
     return *image;
   }
   virtual void draw();
+  virtual Vector2* getCenter();
 };
 
 // For game objects with animations instead of images
@@ -50,6 +52,7 @@ public:
     return anim->images[frame++ % anim->numFrames];
   };
   void draw();
+  virtual Vector2* getCenter();
 };
 
 // Static objects
@@ -69,6 +72,17 @@ class Exit : public StaticObject
 {
   void collision(Vector2 n) {}
   void applyForces() {}
+};
+
+class GravityWell : public StaticObject {
+private:
+  bool positive;
+public:
+  GravityWell(bool pos);
+  void move(float dt) {}
+  void applyForces() {}
+  void collision(Vector2 n) {}
+  bool isPositive() { return positive; }
 };
 
 // Dynamic objects

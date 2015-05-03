@@ -19,19 +19,25 @@ public:
   void Draw(GameEngine* game);
 
   void setLevelSimulator(Simulator* s) { sim = s; }
-  void setMaxPortals(int n) { max_portals = n; }
+  void setMaxGravityWells(int n) { max_wells = n; }
+  void addGravityWell(GravityWell* well);
+  vector<GravityWell*> getWells() { return wells; }
   void setPlayer(Player* p) { player = p; }
 
   void addStatic(GameObject* obj);
   void addDynamic(GameObject* obj);
+  void removeStatic(GameObject* obj);
+  void removeDynamic(GameObject* obj);
 private:
   vector<GameObject*> objects;
+  vector<GravityWell*> wells;
   Player* player;
   Simulator* sim;
   bool exit_reached;
   bool restart;
   bool paused;
-  int max_portals;
-  int num_portals;
+  int max_wells;
   long double lastUpdate; // time in miliseconds of last update (time relative to glutInit call)
+
+  void removeObject(GameObject* obj);
 };

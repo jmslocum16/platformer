@@ -18,6 +18,9 @@ public:
   void addStatic(GameObject* obj);
   void addDynamic(GameObject* obj);
 
+  void removeStatic(GameObject* obj);
+  void removeDynamic(GameObject* obj);
+
   Objects statics;
   Objects dynamics;
   Objects all;
