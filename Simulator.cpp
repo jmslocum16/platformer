@@ -33,18 +33,11 @@ void Simulator::stepSimulation(float dt)
     if (best.hitFraction == numeric_limits<float>::infinity())
     {
       obj1->move(dt);
-
-      Player* p = dynamic_cast<Player*>(obj1);
-
-      if (p)
-      {
-        p->changeState(Falling);
-      }
     }
     else
     {
-      obj1->collision(best.hitNormal);
       obj1->move(dt * best.hitFraction - EPSILON);
+      obj1->collision(best.hitNormal);
     }
   }
 }
