@@ -12,14 +12,14 @@ void StaticObject::draw()
 {
   Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
-	glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
 }
 
 void AnimatedObject::draw()
 {
   //Image i = getImage();
 	//glRasterPos2f(drawPoint.x(), drawPoint.y());
-	//glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+	//glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
 	frame++;
 }
 
@@ -37,14 +37,15 @@ Player::Player(float x, float y, float width, float height, char* file)
   float w = image->width / width*2;
   Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+h), Vector2(x+w,y+h), Vector2(x+w, y)};
   collisionObject = new ConvexPolygon(pts, 4);
-  state = Falling;
+  state = SingleJump;
 }
 
 void Player::applyForces()
 {
   switch (state)
   {
-    case Falling:
+    case SingleJump:
+    case DoubleJump:
       forces = forces + Vector2(0,-1.5); // apply gravity if falling
       break;
     case Ground:
@@ -58,7 +59,14 @@ bool Player::changeState(PlayerState s)
 {
   switch (state)
   {
-    case Falling:
+    case SingleJump:
+      if (s == Ground || s == DoubleJump)
+      {
+        state = s;
+        return true;
+      }
+      break;
+    case DoubleJump:
       if (s == Ground)
       {
         state = s;
@@ -77,7 +85,8 @@ void print(PlayerState state)
 {
   switch(state)
   {
-    case Falling: cout << "Falling" << endl; break;
+    case SingleJump: cout << "SingleJump" << endl; break;
+    case DoubleJump: cout << "DoubleJump" << endl; break;
     case Ground: cout << "Ground" << endl; break;
     case Goal: cout << "Goal" << endl; break;
   }
@@ -97,7 +106,7 @@ void Player::right()
 
 void Player::jump()
 {
-  if (state != Falling && changeState(Falling))
+  if ((state == Ground && changeState(SingleJump)) || (state == SingleJump && changeState(DoubleJump)))
   {
     velocity = velocity + Vector2(0,2);
   }
@@ -105,7 +114,7 @@ void Player::jump()
 
 void Player::collision(Vector2 normal)
 {
-  if (state == Falling)
+  if (state == SingleJump || state == DoubleJump)
   {
     Vector2 n = normal.normalize();
     float proj = velocity * n;
@@ -156,7 +165,7 @@ void Player::draw()
 {
   Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
-	glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
   ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
