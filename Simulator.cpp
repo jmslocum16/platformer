@@ -21,14 +21,22 @@ void Simulator::stepSimulation(float dt)
     CollisionOutput best;
     best.hitFraction = numeric_limits<float>::infinity();
 
+    bool alreadyTouching = false;
     for (int j = 0; j < statics.size(); j++)
     {
       GameObject* obj2 = statics[j];
       CollisionOutput coll = collides(*obj1->collisionObject, obj1->velocity*dt, *obj2->collisionObject);
       if (coll.hitFraction < 0)
-        continue;
-      if (coll.hitFraction < best.hitFraction)
-        best = coll;
+      {
+      }
+      else if (coll.hitFraction <= EPSILON)
+      {
+        alreadyTouching = true;
+      }
+      else if (coll.hitFraction < best.hitFraction)
+      {
+        best = coll;        
+      }
     }
     if (best.hitFraction == numeric_limits<float>::infinity())
     {
