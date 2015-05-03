@@ -13,11 +13,14 @@ void Simulator::stepSimulation(float dt)
     GameObject* obj1 = dynamics[i];
     obj1->applyForces();
     obj1->velocity = obj1->velocity + obj1->forces * dt;
+
     if (obj1->velocity.length() < EPSILON)
       obj1->velocity = Vector2(0,0);
+
     obj1->forces = Vector2(0,0);
     CollisionOutput best;
     best.hitFraction = numeric_limits<float>::infinity();
+
     for (int j = 0; j < statics.size(); j++)
     {
       GameObject* obj2 = statics[j];
@@ -30,6 +33,13 @@ void Simulator::stepSimulation(float dt)
     if (best.hitFraction == numeric_limits<float>::infinity())
     {
       obj1->move(dt);
+
+      Player* p = dynamic_cast<Player*>(obj1);
+
+      if (p)
+      {
+        p->changeState(Falling);
+      }
     }
     else
     {
