@@ -21,7 +21,6 @@ void Simulator::stepSimulation(float dt)
     CollisionOutput best;
     best.hitFraction = numeric_limits<float>::infinity();
 
-    bool alreadyTouching = false;
     for (int j = 0; j < statics.size(); j++)
     {
       GameObject* obj2 = statics[j];
@@ -29,18 +28,42 @@ void Simulator::stepSimulation(float dt)
       if (coll.hitFraction < 0)
       {
       }
-      else if (coll.hitFraction <= EPSILON)
-      {
-        alreadyTouching = true;
-      }
       else if (coll.hitFraction < best.hitFraction)
       {
-        best = coll;        
+        best = coll;
       }
     }
+
     if (best.hitFraction == numeric_limits<float>::infinity())
     {
       obj1->move(dt);
+
+      Player* p = dynamic_cast<Player*>(obj1);
+
+      // Horrible performance, but should work:
+      // If we can collide with something below us within a reasonable distance,
+      // in this case Epsilon * 10 distance away, then we're on the ground. Otherwise,
+      // We're falling.
+      if (p && p->checkState(Ground))
+      {
+        bool hit = false;
+        for (int j = 0; j < statics.size(); j++)
+        {
+          GameObject* obj2 = statics[j];
+          CollisionOutput coll = collides(*obj1->collisionObject, Vector2(0, -EPSILON * 10), *obj2->collisionObject);
+
+          if (coll.hitFraction > EPSILON)
+          {
+            hit = true;
+            break;
+          }
+        }
+
+        if (!hit)
+        {
+          p->changeState(Falling);
+        }
+      }
     }
     else
     {
