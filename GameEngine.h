@@ -61,14 +61,13 @@ public:
 
   MouseInput mouseInput;
   KeyInput keyInput;
+  Image testWellImage;
+
 private:
   // the stack of states
   static GameEngine* singleton;
 
   std::vector<GameState*> states;
   int windowid;
-
-  Image testImage;
-
   bool m_running;
 };

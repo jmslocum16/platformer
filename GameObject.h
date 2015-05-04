@@ -77,12 +77,14 @@ class Exit : public StaticObject
 class GravityWell : public StaticObject {
 private:
   bool positive;
+  Image image;
 public:
-  GravityWell(bool pos);
+  GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
   void applyForces() {}
   void collision(Vector2 n) {}
   bool isPositive() { return positive; }
+  void draw();
 };
 
 // Dynamic objects

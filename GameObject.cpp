@@ -98,8 +98,8 @@ Player::Player(float x, float y, float width, float height)
   drawPoint = Vector2(x,y);
   forces = Vector2(0,0);
   velocity = Vector2(0,0);
-  float h = faceLeft.height / height*2;
-  float w = faceLeft.width / width*2;
+  float h = image->height / height*2;
+  float w = image->width / width*2;
   Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+h), Vector2(x+w,y+h), Vector2(x+w, y)};
   collisionObject = new ConvexPolygon(pts, 4);
   state = SingleJump;
@@ -321,8 +321,28 @@ void Wall::draw()
   glEnd();
 }
 
-GravityWell::GravityWell(bool pos) {
+GravityWell::GravityWell(double dx, double dy, bool pos) {
+  drawPoint = Vector2(dx, dy);
   positive = pos;
+  //image = &GameEngine::getSingleton()->testWellImage;
+  //image = &GameEngine::getSingleton()->testImage;
+  loadImage("images/test.bmp", image);
+
 }
+
+void GravityWell::draw()
+{
+  Image i = getImage();
+  glRasterPos2f(drawPoint.x(), drawPoint.y());
+  glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  Vector2* center = getCenter();
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_POINTS);
+    glVertex2f(center->x(), center->y());
+  glEnd();
+  delete center;
+}
+
+
 
 // TODO override gravitywell's getimage to return a different one based on being positive or negative

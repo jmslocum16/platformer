@@ -35,6 +35,11 @@ ActiveGame* loadLevel(const char* filename) {
       Wall* w = new Wall(p1x, p1y, p2x, p2y);
       level->addStatic(w);
     }
+
+    // TODO REMOVE HACKY AS HELL
+    level->setMaxGravityWells(1);
+    GravityWell* well = new GravityWell(-.5, -.5, true);
+    level->addGravityWell(well);
     file.close();
   }
 

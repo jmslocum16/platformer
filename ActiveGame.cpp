@@ -115,11 +115,15 @@ void ActiveGame::removeDynamic(GameObject* obj) {
 }
 
 void ActiveGame::addGravityWell(GravityWell* well) {
+  cout << "adding well" << endl;
   if (wells.size() == max_wells) {
     vector<GravityWell*>::iterator first = wells.begin();
+    GravityWell* well = *first;
     wells.erase(first);
-	delete *first;
+    removeObject(well);
+	delete well;
   }
-  wells.push_back(well);    
+  wells.push_back(well);
+  objects.push_back(well);
 }
 
