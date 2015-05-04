@@ -11,8 +11,8 @@
 using namespace std;
 
 #define MS_PER_FRAME 30
-#define RUN_SPEED 5
-#define JUMP_SPEED 1.99999999999999999f
+#define RUN_SPEED 5f
+#define JUMP_SPEED 2f
 
 string Player::walk_file = "images/Walk";
 string Player::face_file = "images/Face";
