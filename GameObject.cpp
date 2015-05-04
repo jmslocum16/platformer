@@ -42,7 +42,8 @@ void StaticObject::draw()
 
 Vector2* StaticObject::getCenter() {
   Image i = getImage();
-  return new Vector2(drawPoint.x() + i.width/2, drawPoint.y() + i.height/2);
+  GameEngine* ge = GameEngine::getSingleton();
+  return new Vector2(drawPoint.x() + ((double)i.width)/2/ge->windowWidth, drawPoint.y() + ((double)i.height)/2/ge->windowHeight);
 }
 
 void AnimatedObject::draw()
@@ -98,8 +99,8 @@ Player::Player(float x, float y, float width, float height)
   drawPoint = Vector2(x,y);
   forces = Vector2(0,0);
   velocity = Vector2(0,0);
-  float h = image->height / height*2;
-  float w = image->width / width*2;
+  float h = faceLeft.height / height*2;
+  float w = faceLeft.width / width*2;
   Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+h), Vector2(x+w,y+h), Vector2(x+w, y)};
   collisionObject = new ConvexPolygon(pts, 4);
   state = SingleJump;
@@ -120,18 +121,20 @@ void Player::applyForces()
       ActiveGame* state = (ActiveGame*)(ge->getCurrentState());
       vector<GravityWell*> wells = state->getWells();
       for(vector<GravityWell*>::iterator it = wells.begin(); it != wells.end(); it++) {
+
         GravityWell* well = *it;
         Vector2* wellCenter = well->getCenter();
         Vector2 dif = *center - *wellCenter;
         if (well->isPositive()) {
           dif = Vector2(-dif.x(), -dif.y());
         }
-        Vector2 result = dif.normalize();
+
         double len = dif.length();
+        Vector2 result = dif.normalize();
         if (dif.length() < .1) {
           len = .1;
         }
-        result = result / (len * 10);
+        result = result / (10 * len);
         forces = forces + result;
         delete wellCenter;
       }
@@ -250,6 +253,33 @@ void Player::move(float dt)
   collisionObject->move(velocity * dt);
 }
 
+Image Player::getImage() {
+  Image i;
+  switch (state)
+  {
+    case SingleJump:
+      i = (velocity.x() < 0 ? jumpLeft : jumpRight);
+      break;
+    case DoubleJump:
+      i = (velocity.x() < 0 ? fallLeft : fallRight);
+      break;
+    case Ground:
+      if (velocity.x() < 0)
+      {
+        i = walkLeft.images[lFrame % num_walk];
+      }
+      else
+      {
+        i = walkRight.images[rFrame % num_walk];
+      }
+      break;
+    default:
+      i = (velocity.x() < 0 ? faceLeft : faceRight);
+      break;
+  }
+  return i;
+}
+
 void Player::draw()
 {
   static int count = 0;
@@ -326,7 +356,8 @@ GravityWell::GravityWell(double dx, double dy, bool pos) {
   positive = pos;
   //image = &GameEngine::getSingleton()->testWellImage;
   //image = &GameEngine::getSingleton()->testImage;
-  loadImage("images/test.bmp", image);
+  image = new Image();
+  loadImage("images/test.bmp", *image);
 
 }
 

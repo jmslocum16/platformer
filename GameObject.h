@@ -77,7 +77,6 @@ class Exit : public StaticObject
 class GravityWell : public StaticObject {
 private:
   bool positive;
-  Image image;
 public:
   GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
@@ -136,4 +135,5 @@ public:
   bool changeState(PlayerState s);
   bool checkState(PlayerState s) { return state == s; }
   void collision(Vector2 normal);
+  Image getImage();
 };
