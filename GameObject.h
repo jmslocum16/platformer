@@ -103,8 +103,8 @@ private:
   PlayerState state;
   Vector2 groundSlope;
 
-  int lFrame;
-  int rFrame;
+  float lFrame;
+  float rFrame;
 
 public:
 

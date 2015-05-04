@@ -5,10 +5,13 @@
 
 #include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
 #define MS_PER_FRAME 30
+#define RUN_SPEED 5
+#define JUMP_SPEED 2
 
 string Player::walk_file = "images/Walk";
 string Player::face_file = "images/Face";
@@ -152,13 +155,13 @@ void print(PlayerState state)
 
 void Player::left()
 {
-  Vector2 moveDir = groundSlope * (groundSlope * Vector2(-5,0));
+  Vector2 moveDir = groundSlope * (groundSlope * Vector2(-RUN_SPEED, 0));
   forces = forces + moveDir;
 }
 
 void Player::right()
 {
-  Vector2 moveDir = groundSlope * (groundSlope * Vector2(5,0));
+  Vector2 moveDir = groundSlope * (groundSlope * Vector2(RUN_SPEED, 0));
   forces = forces + moveDir;
 }
 
@@ -166,7 +169,7 @@ void Player::jump()
 {
   if ((state == Ground && changeState(SingleJump)) || (state == SingleJump && changeState(DoubleJump)))
   {
-    velocity = velocity + Vector2(0,2);
+    velocity = velocity + Vector2(0, JUMP_SPEED);
   }
 }
 
@@ -233,19 +236,22 @@ void Player::draw()
       i = (velocity.x() < 0 ? fallLeft : fallRight);
       break;
     case Ground:
+    {
+
       if (velocity.x() < 0)
       {
         if (count % 4 == 0)
-        lFrame++;
-        i = walkLeft.images[lFrame % num_walk];
+        lFrame -= velocity.x();
+        i = walkLeft.images[((int) round(lFrame)) % num_walk];
       }
       else
       {
         if (count % 4 == 0)
-        rFrame++;
-        i = walkRight.images[rFrame % num_walk];
+        rFrame += velocity.x();
+        i = walkRight.images[((int) round(rFrame)) % num_walk];
       }
       break;
+    }
     default:
       i = (velocity.x() < 0 ? faceLeft : faceRight);
       break;
