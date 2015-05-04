@@ -43,7 +43,7 @@ void Simulator::stepSimulation(float dt)
       // Horrible performance, but should work:
       // If we can collide with something below us within a reasonable distance,
       // in this case Epsilon * 10 distance away, then we're on the ground. Otherwise,
-      // We're falling.
+      // we're falling.
       if (p && p->checkState(Ground))
       {
         bool hit = false;
