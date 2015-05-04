@@ -16,3 +16,9 @@ static string printVector(Vector2 v)
   return s.str();
 }
 
+static string itoa(int i)
+{
+  stringstream s;
+  s << i;
+  return s.str();
+}

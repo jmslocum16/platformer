@@ -81,15 +81,36 @@ enum PlayerState
   Goal
 };
 
+using namespace std;
 class Player : public StaticObject
 {
 private:
-  static char* default_file;
+  static string walk_file;
+  static string face_file;
+  static string fall_file;
+  static string jump_file;
+  static int num_walk;
+
+  static Animation walkLeft;
+  static Animation walkRight;
+  static Image faceLeft;
+  static Image faceRight;
+  static Image fallLeft;
+  static Image fallRight;
+  static Image jumpLeft;
+  static Image jumpRight;
 
   PlayerState state;
   Vector2 groundSlope;
+
+  int lFrame;
+  int rFrame;
+
 public:
-  Player(float x, float y, float w, float h, char* file = NULL);
+
+  static void loadAnimations();
+  
+  Player(float x, float y, float w, float h);
   void draw();
   void applyForces();
   void move(float dt);

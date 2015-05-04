@@ -44,7 +44,6 @@ unsigned char * readBMP(const char* FilePath, int &width, int &height)
     BitsPerPixel = FileInfo[28];
     width = FileInfo[18] + (FileInfo[19] << 8);
     height = FileInfo[22] + (FileInfo[23] << 8);
-    cout << "width: " << width << " , height: " << height << endl;
     std::uint32_t PixelsOffset = FileInfo[10] + (FileInfo[11] << 8);
     std::uint32_t size = ((width * BitsPerPixel + 31) / 32) * 4 * height;
     Pixels.resize(size);

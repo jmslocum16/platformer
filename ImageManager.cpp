@@ -1,5 +1,9 @@
 #include "ImageManager.h"
 
+#include <iostream>
+#include <string>
+using namespace std;
+
 void loadImage(char* fname, Image& image) {
 	image.data = readBMP(fname, image.width, image.height);
 }

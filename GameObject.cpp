@@ -4,9 +4,30 @@
 #include "ConvexPolygon.h"
 
 #include <iostream>
+#include <string>
+
 using namespace std;
 
-char* Player::default_file = "images/test.bmp";
+#define MS_PER_FRAME 30
+
+string Player::walk_file = "images/Walk";
+string Player::face_file = "images/Face";
+string Player::fall_file = "images/Fall";
+string Player::jump_file = "images/Jump";
+int Player::num_walk = 8; // 8 frames
+
+string l = "Left";
+string r = "Right";
+string e = ".bmp";
+
+Animation Player::walkLeft;
+Animation Player::walkRight;
+Image Player::faceLeft;
+Image Player::faceRight;
+Image Player::fallLeft;
+Image Player::fallRight;
+Image Player::jumpLeft;
+Image Player::jumpRight;
 
 void StaticObject::draw()
 {
@@ -23,21 +44,58 @@ void AnimatedObject::draw()
 	frame++;
 }
 
-Player::Player(float x, float y, float width, float height, char* file)
+void Player::loadAnimations()
 {
+  loadImage(&(face_file + l + e)[0], faceLeft);
+  loadImage(&(face_file + r + e)[0], faceRight);
+  loadImage(&(fall_file + l + e)[0], fallLeft);
+  loadImage(&(fall_file + r + e)[0], fallRight);
+  loadImage(&(jump_file + l + e)[0], jumpLeft);
+  loadImage(&(jump_file + r + e)[0], jumpRight);
+  char* walkLeftImages[8] =
+  {
+    &(walk_file + l + itoa(0) + e)[0],
+    &(walk_file + l + itoa(1) + e)[0],
+    &(walk_file + l + itoa(2) + e)[0],
+    &(walk_file + l + itoa(3) + e)[0],
+    &(walk_file + l + itoa(4) + e)[0],
+    &(walk_file + l + itoa(5) + e)[0],
+    &(walk_file + l + itoa(6) + e)[0],
+    &(walk_file + l + itoa(7) + e)[0]
+  };
+  char* walkRightImages[8] =
+  {
+    &(walk_file + r + itoa(0) + e)[0],
+    &(walk_file + r + itoa(1) + e)[0],
+    &(walk_file + r + itoa(2) + e)[0],
+    &(walk_file + r + itoa(3) + e)[0],
+    &(walk_file + r + itoa(4) + e)[0],
+    &(walk_file + r + itoa(5) + e)[0],
+    &(walk_file + r + itoa(6) + e)[0],
+    &(walk_file + r + itoa(7) + e)[0]
+  };
+  /*for (int i = 0; i < num_walk; i++)
+  {
+    walkLeftImages[i] = &(walk_file + l + itoa(i) + e)[0];
+    walkRightImages[i] = &(walk_file + r + itoa(i) + e)[0];
+  }*/
+  loadAnimation(num_walk, walkLeftImages, walkLeft);
+  loadAnimation(num_walk, walkRightImages, walkRight);
+}
+
+Player::Player(float x, float y, float width, float height)
+{
+  loadAnimations();
   drawPoint = Vector2(x,y);
   forces = Vector2(0,0);
   velocity = Vector2(0,0);
-  image = new Image();
-  if (file)
-    loadImage(file, *image);
-  else
-    loadImage(default_file, *image);
-  float h = image->height / height*2;
-  float w = image->width / width*2;
+  float h = faceLeft.height / height*2;
+  float w = faceLeft.width / width*2;
   Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+h), Vector2(x+w,y+h), Vector2(x+w, y)};
   collisionObject = new ConvexPolygon(pts, 4);
   state = SingleJump;
+  lFrame = 0;
+  rFrame = 0;
 }
 
 void Player::applyForces()
@@ -163,7 +221,35 @@ void Player::move(float dt)
 
 void Player::draw()
 {
-  Image i = getImage();
+  static int count = 0;
+  count++;
+  Image i;
+  switch (state)
+  {
+    case SingleJump:
+      i = (velocity.x() < 0 ? jumpLeft : jumpRight);
+      break;
+    case DoubleJump:
+      i = (velocity.x() < 0 ? fallLeft : fallRight);
+      break;
+    case Ground:
+      if (velocity.x() < 0)
+      {
+        if (count % 4 == 0)
+        lFrame++;
+        i = walkLeft.images[lFrame % num_walk];
+      }
+      else
+      {
+        if (count % 4 == 0)
+        rFrame++;
+        i = walkRight.images[rFrame % num_walk];
+      }
+      break;
+    default:
+      i = (velocity.x() < 0 ? faceLeft : faceRight);
+      break;
+  }
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
 	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
   ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
