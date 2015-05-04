@@ -61,7 +61,7 @@ void Simulator::stepSimulation(float dt)
 
         if (!hit)
         {
-          p->changeState(Falling);
+          p->changeState(SingleJump);
         }
       }
     }

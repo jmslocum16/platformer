@@ -11,7 +11,6 @@
 // global I/O routines
 //extern unsigned char *readBMP(const char *fname, int& width, int& height);
 unsigned char* readBMP(const char *fname, int& width, int& height);
-//bool writeBMP(const char *iname, int width, int height, const unsigned char *data); 
 
 #endif
 

@@ -75,7 +75,8 @@ class Exit : public StaticObject
 
 enum PlayerState
 {
-  Falling=0,
+  SingleJump=0,
+  DoubleJump,
   Ground,
   Goal
 };
