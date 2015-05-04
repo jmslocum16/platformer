@@ -134,7 +134,7 @@ void Player::applyForces()
         if (dif.length() < .1) {
           len = .1;
         }
-        result = result / (10 * len);
+        result = result / (1 * len);
         forces = forces + result;
         delete wellCenter;
       }
@@ -186,12 +186,14 @@ void print(PlayerState state)
 
 void Player::left()
 {
+  Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
   Vector2 moveDir = groundSlope * (groundSlope * Vector2(-RUN_SPEED, 0));
   forces = forces + moveDir;
 }
 
 void Player::right()
 {
+  Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
   Vector2 moveDir = groundSlope * (groundSlope * Vector2(RUN_SPEED, 0));
   forces = forces + moveDir;
 }
@@ -214,14 +216,8 @@ void Player::collision(Vector2 normal)
     {
       Vector2 collisionLoss = n * (velocity * n);
       velocity = velocity - collisionLoss;
-      if (Vector2(1,0) * Vector2(1,1).normalize() > abs(n.x()))
-      {
-        if (abs(n.x()) > EPSILON && abs(n.y()) > EPSILON)
-          groundSlope = Vector2(1.0/normal.x(), -1.0/normal.y()).normalize();
-        else
-          groundSlope = Vector2(1.0, 0);
-        changeState(Ground);
-      }
+      prevNormal = n;
+      changeState(Ground);
     }
     else
     {
@@ -232,14 +228,7 @@ void Player::collision(Vector2 normal)
   if (state == Ground)
   {
     Vector2 n = normal.normalize();
-    if (abs(n.x()) > EPSILON)
-    {
-      groundSlope = Vector2(1.0/normal.x(), -1.0/normal.y()).normalize();
-    }
-    else
-    {
-      groundSlope = Vector2(1.0, 0);
-    }
+    prevNormal = n;
     float proj = velocity * n;
     Vector2 collisionLoss = n * (velocity * n);
     velocity = velocity - collisionLoss;

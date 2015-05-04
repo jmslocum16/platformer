@@ -116,7 +116,7 @@ private:
   static Image jumpRight;
 
   PlayerState state;
-  Vector2 groundSlope;
+  Vector2 prevNormal;
 
   float lFrame;
   float rFrame;
