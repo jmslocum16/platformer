@@ -14,7 +14,7 @@ void Simulator::stepSimulation(float dt)
     obj1->applyForces();
     obj1->velocity = obj1->velocity + obj1->forces * dt;
 
-    if (obj1->velocity.length() < EPSILON)
+    if (obj1->velocity.lengthSq() < EPSILON * EPSILON)
       obj1->velocity = Vector2(0,0);
 
     obj1->forces = Vector2(0,0);
