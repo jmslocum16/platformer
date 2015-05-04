@@ -12,7 +12,7 @@ using namespace std;
 
 #define MS_PER_FRAME 30
 #define RUN_SPEED 5
-#define JUMP_SPEED 2
+#define JUMP_SPEED 1.99999999999999999f
 
 string Player::walk_file = "images/Walk";
 string Player::face_file = "images/Face";
@@ -295,7 +295,6 @@ void Player::draw()
       break;
     case Ground:
     {
-
       if (velocity.x() < 0)
       {
         if (count % 4 == 0)
