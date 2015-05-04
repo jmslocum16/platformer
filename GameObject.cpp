@@ -266,11 +266,11 @@ Image Player::getImage() {
     case Ground:
       if (velocity.x() < 0)
       {
-        i = walkLeft.images[lFrame % num_walk];
+        i = walkLeft.images[((int)round(lFrame)) % num_walk];
       }
       else
       {
-        i = walkRight.images[rFrame % num_walk];
+        i = walkRight.images[((int) round(rFrame)) % num_walk];
       }
       break;
     default:
