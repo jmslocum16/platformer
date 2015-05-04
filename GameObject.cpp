@@ -169,7 +169,7 @@ void Player::jump()
 {
   if ((state == Ground && changeState(SingleJump)) || (state == SingleJump && changeState(DoubleJump)))
   {
-    velocity = velocity + Vector2(0, JUMP_SPEED);
+    velocity = Vector2(velocity.x(), max(velocity.y(), (float) JUMP_SPEED));
   }
 }
 
