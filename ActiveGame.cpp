@@ -58,6 +58,9 @@ void ActiveGame::HandleEvents(GameEngine* game)
             case 27:
                 GameEngine::getSingleton()->Quit();
                 break;
+            case 'r':
+                GameEngine::getSingleton()->restartLevel();
+                break;
         }
     }
 

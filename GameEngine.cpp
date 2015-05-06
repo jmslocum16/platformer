@@ -125,7 +125,7 @@ void GameEngine::restartLevel() {
   const char* fname = oldGame->getFname();
   oldGame->Cleanup();
   ActiveGame* newGame = loadLevel(fname);
-  changeState(newGame);
+  ChangeState(newGame);
   delete oldGame;
   
 }
