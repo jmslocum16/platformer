@@ -31,18 +31,23 @@ ActiveGame* loadLevel(const char* filename) {
     getline(file, line); // level name
     float playerX;
     float playerY;
-    file >> playerX;
-    file >> playerY;
-    Player* p = new Player(playerX, playerY, w, h); // strip newline?
-
     float exitX;
     float exitY;
+    int maxWells;
+    float factor;
+    file >> playerX;
+    file >> playerY;
     file >> exitX;
     file >> exitY;
+    file >> maxWells;
+    file >> factor;
+    GravityWell::setFactor(factor);
+    Player* p = new Player(playerX, playerY, w, h); // strip newline?
+
     Exit* exit = new Exit(exitX, exitY);
     level->addStatic(exit);
 
-	level->addDynamic(p);
+	  level->addDynamic(p);
     level->setPlayer(p);
 
 
@@ -57,10 +62,9 @@ ActiveGame* loadLevel(const char* filename) {
       level->addStatic(w);
     }
 
-    // TODO REMOVE HACKY AS HELL
-    level->setMaxGravityWells(1);
-    GravityWell* well = new GravityWell(-.5, -.5, true);
-    level->addGravityWell(well);
+    level->setMaxGravityWells(maxWells);
+    /*GravityWell* well = new GravityWell(1, -.5, false);
+    level->addGravityWell(well);*/
     file.close();
   }
 

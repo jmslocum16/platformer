@@ -14,6 +14,8 @@ using namespace std;
 #define RUN_SPEED 5
 #define JUMP_SPEED 1.99999999999999999f
 
+float GravityWell::factor = 1.0f;
+
 void StaticObject::draw()
 {
   Image i = getImage();
@@ -80,7 +82,7 @@ void Player::applyForces()
         if (dif.length() < .1) {
           len = .1;
         }
-        result = result / (1 * len);
+        result = (result / (1 * len)) * GravityWell::factor;
         forces = forces + result;
         delete wellCenter;
       }

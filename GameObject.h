@@ -81,11 +81,13 @@ class GravityWell : public StaticObject {
 private:
   bool positive;
 public:
+  static float factor;
   GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
   void applyForces() {}
   void collision(Vector2 n) {}
   bool isPositive() { return positive; }
+  static void setFactor(double f) { factor = f; }
   void draw();
 };
 

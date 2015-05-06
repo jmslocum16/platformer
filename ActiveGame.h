@@ -21,6 +21,7 @@ public:
 
   void setLevelSimulator(Simulator* s) { sim = s; }
   void setMaxGravityWells(int n) { max_wells = n; }
+  void removeWell();
   void addGravityWell(GravityWell* well);
   vector<GravityWell*> getWells() { return wells; }
   void setPlayer(Player* p) { player = p; }
