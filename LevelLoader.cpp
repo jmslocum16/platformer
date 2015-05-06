@@ -6,7 +6,7 @@
 using namespace std;
 
 ActiveGame* loadLevel(const char* filename) {
-  ActiveGame* level = new ActiveGame();
+  ActiveGame* level = new ActiveGame(filename);
   Simulator* sim = new Simulator();
   float h = GameEngine::getSingleton()->windowHeight;
   float w = GameEngine::getSingleton()->windowWidth;

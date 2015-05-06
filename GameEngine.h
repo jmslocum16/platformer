@@ -42,6 +42,8 @@ public:
   void PushState(GameState* state);
   void PopState();
   GameState* getCurrentState();
+  void finishLevel();
+  void restartLevel();
 
   void HandleEvents();
   void Update();
@@ -70,4 +72,6 @@ private:
   std::vector<GameState*> states;
   int windowid;
   bool m_running;
+  bool hasNextLevel();
+  void loadNextLevel();
 };

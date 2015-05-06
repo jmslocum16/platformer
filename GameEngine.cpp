@@ -114,6 +114,22 @@ GameState* GameEngine::getCurrentState() {
   return states.back();
 }
 
+void GameEngine::finishLevel() {
+  if (hasNextLevel()) {
+    loadNextLevel();
+  }
+}
+
+void GameEngine::restartLevel() {
+  ActiveGame* oldGame = dynamic_cast<ActiveGame*>(getCurrentState());
+  const char* fname = oldGame->getFname();
+  oldGame->Cleanup();
+  ActiveGame* newGame = loadLevel(fname);
+  changeState(newGame);
+  delete oldGame;
+  
+}
+
 void GameEngine::HandleEvents()
 {
   states.back()->HandleEvents(this);
@@ -123,4 +139,13 @@ void GameEngine::Update()
 {
   HandleEvents();
   states.back()->Update(this);
+}
+
+bool GameEngine::hasNextLevel() {
+  // TODO
+  return false;
+}
+
+void GameEngine::loadNextLevel() {
+  // TODO
 }

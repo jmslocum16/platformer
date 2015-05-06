@@ -8,6 +8,7 @@
 class ActiveGame : public GameState
 {
 public:
+  ActiveGame(const char* fn) { fname = fn; }
   void Init();
   void Cleanup();
 
@@ -28,7 +29,10 @@ public:
   void addDynamic(GameObject* obj);
   void removeStatic(GameObject* obj);
   void removeDynamic(GameObject* obj);
+
+ const char* getFname() {return fname; }
 private:
+  const char* fname;
   vector<GameObject*> objects;
   vector<GravityWell*> wells;
   Player* player;
