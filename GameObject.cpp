@@ -11,8 +11,8 @@
 using namespace std;
 
 #define MS_PER_FRAME 30
-#define RUN_SPEED 5f
-#define JUMP_SPEED 2f
+#define RUN_SPEED 5.0f
+#define JUMP_SPEED 2.0f
 
 float GravityWell::factor = 1.0f;
 
