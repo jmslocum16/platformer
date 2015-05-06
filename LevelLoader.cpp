@@ -5,6 +5,16 @@
 
 using namespace std;
 
+
+/*
+ * File format:
+ * Level Name
+ * playerx playery
+ * exitx exity
+ * numwalls
+ * for numwalls:
+ *   p1x p1y p2x p2y
+ */
 ActiveGame* loadLevel(const char* filename) {
   ActiveGame* level = new ActiveGame(filename);
   Simulator* sim = new Simulator();
@@ -24,8 +34,19 @@ ActiveGame* loadLevel(const char* filename) {
     file >> playerX;
     file >> playerY;
     Player* p = new Player(playerX, playerY, w, h); // strip newline?
-    level->addDynamic(p);
+
+    float exitX;
+    float exitY;
+    file >> exitX;
+    file >> exitY;
+    Exit* exit = new Exit(exitX, exitY);
+    level->addStatic(exit);
+
+	level->addDynamic(p);
     level->setPlayer(p);
+
+
+
     long numWalls;
     file >> numWalls;
     for (int i = 0; i < numWalls; i++)

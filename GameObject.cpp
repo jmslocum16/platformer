@@ -271,6 +271,15 @@ void Wall::draw()
   glEnd();
 }
 
+Exit::Exit(double dx, double dy) {
+  drawPoint = Vector2(dx, dy);
+  image = &GameEngine::getSingleton()->exitDoor;
+  float h = 2*image->height / GameEngine::getSingleton()->windowWidth;
+  float w = 2*image->width / GameEngine::getSingleton()->windowHeight;
+  Vector2 pts[4] = {Vector2(dx,dy), Vector2(dx+w,dy), Vector2(dx+w,dy+h), Vector2(dx, dy+h)};
+  collisionObject = new ConvexPolygon(pts, 4); 
+}
+
 GravityWell::GravityWell(double dx, double dy, bool pos) {
   drawPoint = Vector2(dx, dy);
   positive = pos;
@@ -296,5 +305,3 @@ void GravityWell::draw()
   glEnd();
   delete center;
 }
-
-// TODO override gravitywell's getimage to return a different one based on being positive or negative

@@ -70,6 +70,9 @@ public:
 
 class Exit : public StaticObject
 {
+public:
+  Exit(double dx, double dy);
+  void move(float dt) {}
   void collision(Vector2 n) {}
   void applyForces() {}
 };

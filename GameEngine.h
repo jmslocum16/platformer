@@ -87,6 +87,9 @@ public:
   static string well_file;
   static Image gravityWell;
 
+  static string door_file;
+  static Image exitDoor;
+
 private:
 
   void loadResources();
