@@ -228,7 +228,14 @@ void Player::collision(Vector2 normal)
   if (state == Ground)
   {
     Vector2 n = normal.normalize();
-    prevNormal = n;
+    if (n.x() * n.x() < 0.5)
+    {
+      prevNormal = n;
+    }
+    else
+    {
+      changeState(SingleJump);
+    }
     float proj = velocity * n;
     Vector2 collisionLoss = n * (velocity * n);
     velocity = velocity - collisionLoss;
