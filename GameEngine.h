@@ -67,14 +67,13 @@ public:
 
   MouseInput mouseInput;
   KeyInput keyInput;
-  Image testWellImage;
 
+  // player resources
   static string walk_file;
   static string face_file;
   static string fall_file;
   static string jump_file;
   static int num_walk;
-
   static Animation walkLeft;
   static Animation walkRight;
   static Image faceLeft;
@@ -83,6 +82,10 @@ public:
   static Image fallRight;
   static Image jumpLeft;
   static Image jumpRight;
+
+  // gravity well resources
+  static string well_file;
+  static Image gravityWell;
 
 private:
 

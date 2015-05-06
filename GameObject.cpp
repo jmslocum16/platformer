@@ -228,29 +228,6 @@ Image Player::getImage() {
       i = (velocity.x() < 0 ? game->faceLeft : game->faceRight);
       break;
   }
-  /*Image i;
-  switch (state)
-  {
-    case SingleJump:
-      i = (velocity.x() < 0 ? jumpLeft : jumpRight);
-      break;
-    case DoubleJump:
-      i = (velocity.x() < 0 ? fallLeft : fallRight);
-      break;
-    case Ground:
-      if (velocity.x() < 0)
-      {
-        i = walkLeft.images[((int)round(lFrame)) % num_walk];
-      }
-      else
-      {
-        i = walkRight.images[((int) round(rFrame)) % num_walk];
-      }
-      break;
-    default:
-      i = (velocity.x() < 0 ? faceLeft : faceRight);
-      break;
-  }*/
   return i;
 }
 
@@ -297,18 +274,21 @@ void Wall::draw()
 GravityWell::GravityWell(double dx, double dy, bool pos) {
   drawPoint = Vector2(dx, dy);
   positive = pos;
-  //image = &GameEngine::getSingleton()->testWellImage;
-  //image = &GameEngine::getSingleton()->testImage;
-  image = new Image();
-  loadImage("images/test.bmp", *image);
-
+  image = &GameEngine::getSingleton()->gravityWell;
 }
 
 void GravityWell::draw()
 {
   Image i = getImage();
   glRasterPos2f(drawPoint.x(), drawPoint.y());
-  glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  if (positive)
+  {
+    glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+  }
+  else
+  {
+    glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  }
   Vector2* center = getCenter();
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_POINTS);
@@ -316,7 +296,5 @@ void GravityWell::draw()
   glEnd();
   delete center;
 }
-
-
 
 // TODO override gravitywell's getimage to return a different one based on being positive or negative

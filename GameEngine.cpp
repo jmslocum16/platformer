@@ -13,6 +13,7 @@ string GameEngine::face_file = "images/Face";
 string GameEngine::fall_file = "images/Fall";
 string GameEngine::jump_file = "images/Jump";
 int GameEngine::num_walk = 8; // 8 frames
+string GameEngine::well_file = "images/Well";
 
 string l = "Left";
 string r = "Right";
@@ -26,6 +27,8 @@ Image GameEngine::fallLeft;
 Image GameEngine::fallRight;
 Image GameEngine::jumpLeft;
 Image GameEngine::jumpRight;
+
+Image GameEngine::gravityWell;
 
 void GameEngine::loadResources()
 {
@@ -59,6 +62,8 @@ void GameEngine::loadResources()
   };
   loadAnimation(num_walk, walkLeftImages, walkLeft);
   loadAnimation(num_walk, walkRightImages, walkRight);
+
+  loadImage(&(well_file + e)[0], gravityWell);
 }
 
 void mouseFunc(int button, int state, int x, int y)
