@@ -34,10 +34,20 @@ void ActiveGame::HandleEvents(GameEngine* game)
         MouseEvent e = *iter;
         if (e.state == GLUT_DOWN)
         {
-        cout << "X: " << e.x << " Y: " << e.y << endl;
-        float x = (2*(float) e.x / game->windowWidth) - 1.0;
-        float y = (2*(float) (game->windowHeight - e.y) / game->windowHeight) - 1.0;
-        cout << "Screen x,y: " << x << "," << y << endl;
+          float x = (2*(float) e.x / game->windowWidth) - 1.0;
+          float y = (2*(float) (game->windowHeight - e.y) / game->windowHeight) - 1.0;
+          switch (e.button)
+          {
+            case GLUT_MIDDLE_BUTTON:
+              removeWell();
+              break;
+            case GLUT_LEFT_BUTTON:
+            case GLUT_RIGHT_BUTTON:
+              GravityWell* well = new GravityWell(x - GameEngine::gravityWell.width / (float)GameEngine::getSingleton()->windowWidth,
+                                                  y - GameEngine::gravityWell.height / (float)GameEngine::getSingleton()->windowHeight, e.button == GLUT_LEFT_BUTTON);
+              addGravityWell(well);
+              break;
+          }
         }
     }
 
@@ -57,6 +67,9 @@ void ActiveGame::HandleEvents(GameEngine* game)
                 break;
             case 27:
                 GameEngine::getSingleton()->Quit();
+                break;
+            case 'r':
+                GameEngine::getSingleton()->restartLevel();
                 break;
         }
     }
@@ -111,17 +124,22 @@ void ActiveGame::removeStatic(GameObject* obj) {
 
 void ActiveGame::removeDynamic(GameObject* obj) {
   removeObject(obj);
-  sim->removeStatic(obj);
+  sim->removeDynamic(obj);
+}
+
+void ActiveGame::removeWell()
+{
+  vector<GravityWell*>::iterator first = wells.begin();
+  GravityWell* well = *first;
+  wells.erase(first);
+  removeObject(well);
+	delete well;
 }
 
 void ActiveGame::addGravityWell(GravityWell* well) {
-  cout << "adding well" << endl;
-  if (wells.size() == max_wells) {
-    vector<GravityWell*>::iterator first = wells.begin();
-    GravityWell* well = *first;
-    wells.erase(first);
-    removeObject(well);
-	delete well;
+  if (wells.size() == max_wells)
+  {
+    removeWell();
   }
   wells.push_back(well);
   objects.push_back(well);

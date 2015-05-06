@@ -8,7 +8,9 @@
 #include <GL/glut.h>  // GLUT, include glu.h and gl.h
 #endif
 #include <vector>
+#include <string>
 
+#include "Util.h"
 #include "ImageManager.h"
 
 class GameState;
@@ -29,8 +31,10 @@ struct KeyEvent
   int y;
 };
 
-typedef std::vector<MouseEvent> MouseInput;
-typedef std::vector<KeyEvent> KeyInput;
+using namespace std;
+
+typedef vector<MouseEvent> MouseInput;
+typedef vector<KeyEvent> KeyInput;
 
 class GameEngine
 {
@@ -42,6 +46,8 @@ public:
   void PushState(GameState* state);
   void PopState();
   GameState* getCurrentState();
+  void finishLevel();
+  void restartLevel();
 
   void HandleEvents();
   void Update();
@@ -61,13 +67,39 @@ public:
 
   MouseInput mouseInput;
   KeyInput keyInput;
-  Image testWellImage;
+
+  // player resources
+  static string walk_file;
+  static string face_file;
+  static string fall_file;
+  static string jump_file;
+  static int num_walk;
+  static Animation walkLeft;
+  static Animation walkRight;
+  static Image faceLeft;
+  static Image faceRight;
+  static Image fallLeft;
+  static Image fallRight;
+  static Image jumpLeft;
+  static Image jumpRight;
+
+  // gravity well resources
+  static string well_file;
+  static Image gravityWell;
+
+  static string door_file;
+  static Image exitDoor;
 
 private:
+
+  void loadResources();
+
   // the stack of states
   static GameEngine* singleton;
 
   std::vector<GameState*> states;
   int windowid;
   bool m_running;
+  bool hasNextLevel();
+  void loadNextLevel();
 };

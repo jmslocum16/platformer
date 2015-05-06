@@ -5,8 +5,18 @@
 
 using namespace std;
 
+
+/*
+ * File format:
+ * Level Name
+ * playerx playery
+ * exitx exity
+ * numwalls
+ * for numwalls:
+ *   p1x p1y p2x p2y
+ */
 ActiveGame* loadLevel(const char* filename) {
-  ActiveGame* level = new ActiveGame();
+  ActiveGame* level = new ActiveGame(filename);
   Simulator* sim = new Simulator();
   float h = GameEngine::getSingleton()->windowHeight;
   float w = GameEngine::getSingleton()->windowWidth;
@@ -21,11 +31,27 @@ ActiveGame* loadLevel(const char* filename) {
     getline(file, line); // level name
     float playerX;
     float playerY;
+    float exitX;
+    float exitY;
+    int maxWells;
+    float factor;
     file >> playerX;
     file >> playerY;
+    file >> exitX;
+    file >> exitY;
+    file >> maxWells;
+    file >> factor;
+    GravityWell::setFactor(factor);
     Player* p = new Player(playerX, playerY, w, h); // strip newline?
-    level->addDynamic(p);
+
+    Exit* exit = new Exit(exitX, exitY);
+    level->addStatic(exit);
+
+	  level->addDynamic(p);
     level->setPlayer(p);
+
+
+
     long numWalls;
     file >> numWalls;
     for (int i = 0; i < numWalls; i++)
@@ -36,10 +62,9 @@ ActiveGame* loadLevel(const char* filename) {
       level->addStatic(w);
     }
 
-    // TODO REMOVE HACKY AS HELL
-    level->setMaxGravityWells(1);
-    GravityWell* well = new GravityWell(-.5, -.5, true);
-    level->addGravityWell(well);
+    level->setMaxGravityWells(maxWells);
+    /*GravityWell* well = new GravityWell(1, -.5, false);
+    level->addGravityWell(well);*/
     file.close();
   }
 

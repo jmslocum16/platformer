@@ -8,6 +8,7 @@
 class ActiveGame : public GameState
 {
 public:
+  ActiveGame(const char* fn) { fname = fn; }
   void Init();
   void Cleanup();
 
@@ -20,6 +21,7 @@ public:
 
   void setLevelSimulator(Simulator* s) { sim = s; }
   void setMaxGravityWells(int n) { max_wells = n; }
+  void removeWell();
   void addGravityWell(GravityWell* well);
   vector<GravityWell*> getWells() { return wells; }
   void setPlayer(Player* p) { player = p; }
@@ -28,7 +30,10 @@ public:
   void addDynamic(GameObject* obj);
   void removeStatic(GameObject* obj);
   void removeDynamic(GameObject* obj);
+
+ const char* getFname() {return fname; }
 private:
+  const char* fname;
   vector<GameObject*> objects;
   vector<GravityWell*> wells;
   Player* player;

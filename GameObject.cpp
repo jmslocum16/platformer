@@ -14,24 +14,7 @@ using namespace std;
 #define RUN_SPEED 5f
 #define JUMP_SPEED 2f
 
-string Player::walk_file = "images/Walk";
-string Player::face_file = "images/Face";
-string Player::fall_file = "images/Fall";
-string Player::jump_file = "images/Jump";
-int Player::num_walk = 8; // 8 frames
-
-string l = "Left";
-string r = "Right";
-string e = ".bmp";
-
-Animation Player::walkLeft;
-Animation Player::walkRight;
-Image Player::faceLeft;
-Image Player::faceRight;
-Image Player::fallLeft;
-Image Player::fallRight;
-Image Player::jumpLeft;
-Image Player::jumpRight;
+float GravityWell::factor = 1.0f;
 
 void StaticObject::draw()
 {
@@ -54,40 +37,6 @@ void AnimatedObject::draw()
 	frame++;
 }
 
-void Player::loadAnimations()
-{
-  loadImage(&(face_file + l + e)[0], faceLeft);
-  loadImage(&(face_file + r + e)[0], faceRight);
-  loadImage(&(fall_file + l + e)[0], fallLeft);
-  loadImage(&(fall_file + r + e)[0], fallRight);
-  loadImage(&(jump_file + l + e)[0], jumpLeft);
-  loadImage(&(jump_file + r + e)[0], jumpRight);
-  char* walkLeftImages[8] =
-  {
-    &(walk_file + l + itoa(0) + e)[0],
-    &(walk_file + l + itoa(1) + e)[0],
-    &(walk_file + l + itoa(2) + e)[0],
-    &(walk_file + l + itoa(3) + e)[0],
-    &(walk_file + l + itoa(4) + e)[0],
-    &(walk_file + l + itoa(5) + e)[0],
-    &(walk_file + l + itoa(6) + e)[0],
-    &(walk_file + l + itoa(7) + e)[0]
-  };
-  char* walkRightImages[8] =
-  {
-    &(walk_file + r + itoa(0) + e)[0],
-    &(walk_file + r + itoa(1) + e)[0],
-    &(walk_file + r + itoa(2) + e)[0],
-    &(walk_file + r + itoa(3) + e)[0],
-    &(walk_file + r + itoa(4) + e)[0],
-    &(walk_file + r + itoa(5) + e)[0],
-    &(walk_file + r + itoa(6) + e)[0],
-    &(walk_file + r + itoa(7) + e)[0]
-  };
-  loadAnimation(num_walk, walkLeftImages, walkLeft);
-  loadAnimation(num_walk, walkRightImages, walkRight);
-}
-
 Vector2* AnimatedObject::getCenter() {
   Image i = anim->images[frame % anim->numFrames];
   return new Vector2(drawPoint.x() + i.width/2, drawPoint.y() + i.height/2);
@@ -95,13 +44,12 @@ Vector2* AnimatedObject::getCenter() {
 
 Player::Player(float x, float y, float width, float height)
 {
-  loadAnimations();
   drawPoint = Vector2(x,y);
   forces = Vector2(0,0);
   velocity = Vector2(0,0);
-  float h = faceLeft.height / height*2;
-  float w = faceLeft.width / width*2;
-  Vector2 pts[4] = {Vector2(x,y), Vector2(x,y+h), Vector2(x+w,y+h), Vector2(x+w, y)};
+  float h = GameEngine::getSingleton()->faceLeft.height / height*2;
+  float w = GameEngine::getSingleton()->faceLeft.width / width*2;
+  Vector2 pts[4] = {Vector2(x+7.0/width,y), Vector2(x+7.0/width,y+h), Vector2(x+w-7.0/width,y+h), Vector2(x+w-7.0/width, y)};
   collisionObject = new ConvexPolygon(pts, 4);
   state = SingleJump;
   lFrame = 0;
@@ -134,7 +82,7 @@ void Player::applyForces()
         if (dif.length() < .1) {
           len = .1;
         }
-        result = result / (1 * len);
+        result = (result / (1 * len)) * GravityWell::factor;
         forces = forces + result;
         delete wellCenter;
       }
@@ -228,7 +176,14 @@ void Player::collision(Vector2 normal)
   if (state == Ground)
   {
     Vector2 n = normal.normalize();
-    prevNormal = n;
+    if (n.x() * n.x() < 0.5)
+    {
+      prevNormal = n;
+    }
+    else
+    {
+      changeState(SingleJump);
+    }
     float proj = velocity * n;
     Vector2 collisionLoss = n * (velocity * n);
     velocity = velocity - collisionLoss;
@@ -243,44 +198,17 @@ void Player::move(float dt)
 }
 
 Image Player::getImage() {
-  Image i;
-  switch (state)
-  {
-    case SingleJump:
-      i = (velocity.x() < 0 ? jumpLeft : jumpRight);
-      break;
-    case DoubleJump:
-      i = (velocity.x() < 0 ? fallLeft : fallRight);
-      break;
-    case Ground:
-      if (velocity.x() < 0)
-      {
-        i = walkLeft.images[((int)round(lFrame)) % num_walk];
-      }
-      else
-      {
-        i = walkRight.images[((int) round(rFrame)) % num_walk];
-      }
-      break;
-    default:
-      i = (velocity.x() < 0 ? faceLeft : faceRight);
-      break;
-  }
-  return i;
-}
-
-void Player::draw()
-{
   static int count = 0;
+  GameEngine* game = GameEngine::getSingleton();
   count++;
   Image i;
   switch (state)
   {
     case SingleJump:
-      i = (velocity.x() < 0 ? jumpLeft : jumpRight);
+      i = (velocity.x() < 0 ? game->jumpLeft : game->jumpRight);
       break;
     case DoubleJump:
-      i = (velocity.x() < 0 ? fallLeft : fallRight);
+      i = (velocity.x() < 0 ? game->fallLeft : game->fallRight);
       break;
     case Ground:
     {
@@ -288,20 +216,26 @@ void Player::draw()
       {
         if (count % 4 == 0)
         lFrame -= velocity.x();
-        i = walkLeft.images[((int) round(lFrame)) % num_walk];
+        i = game->walkLeft.images[((int) round(lFrame)) % game->num_walk];
       }
       else
       {
         if (count % 4 == 0)
         rFrame += velocity.x();
-        i = walkRight.images[((int) round(rFrame)) % num_walk];
+        i = game->walkRight.images[((int) round(rFrame)) % game->num_walk];
       }
       break;
     }
     default:
-      i = (velocity.x() < 0 ? faceLeft : faceRight);
+      i = (velocity.x() < 0 ? game->faceLeft : game->faceRight);
       break;
   }
+  return i;
+}
+
+void Player::draw()
+{
+  Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
 	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
   ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
@@ -339,21 +273,33 @@ void Wall::draw()
   glEnd();
 }
 
+Exit::Exit(double dx, double dy) {
+  drawPoint = Vector2(dx, dy);
+  image = &GameEngine::getSingleton()->exitDoor;
+  float h = 2*image->height / GameEngine::getSingleton()->windowWidth;
+  float w = 2*image->width / GameEngine::getSingleton()->windowHeight;
+  Vector2 pts[4] = {Vector2(dx,dy), Vector2(dx+w,dy), Vector2(dx+w,dy+h), Vector2(dx, dy+h)};
+  collisionObject = new ConvexPolygon(pts, 4); 
+}
+
 GravityWell::GravityWell(double dx, double dy, bool pos) {
   drawPoint = Vector2(dx, dy);
   positive = pos;
-  //image = &GameEngine::getSingleton()->testWellImage;
-  //image = &GameEngine::getSingleton()->testImage;
-  image = new Image();
-  loadImage("images/test.bmp", *image);
-
+  image = &GameEngine::getSingleton()->gravityWell;
 }
 
 void GravityWell::draw()
 {
   Image i = getImage();
   glRasterPos2f(drawPoint.x(), drawPoint.y());
-  glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  if (positive)
+  {
+    glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+  }
+  else
+  {
+    glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  }
   Vector2* center = getCenter();
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_POINTS);
@@ -361,7 +307,3 @@ void GravityWell::draw()
   glEnd();
   delete center;
 }
-
-
-
-// TODO override gravitywell's getimage to return a different one based on being positive or negative

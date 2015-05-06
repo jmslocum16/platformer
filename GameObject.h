@@ -70,6 +70,9 @@ public:
 
 class Exit : public StaticObject
 {
+public:
+  Exit(double dx, double dy);
+  void move(float dt) {}
   void collision(Vector2 n) {}
   void applyForces() {}
 };
@@ -78,11 +81,13 @@ class GravityWell : public StaticObject {
 private:
   bool positive;
 public:
+  static float factor;
   GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
   void applyForces() {}
   void collision(Vector2 n) {}
   bool isPositive() { return positive; }
+  static void setFactor(double f) { factor = f; }
   void draw();
 };
 
@@ -100,20 +105,6 @@ using namespace std;
 class Player : public StaticObject
 {
 private:
-  static string walk_file;
-  static string face_file;
-  static string fall_file;
-  static string jump_file;
-  static int num_walk;
-
-  static Animation walkLeft;
-  static Animation walkRight;
-  static Image faceLeft;
-  static Image faceRight;
-  static Image fallLeft;
-  static Image fallRight;
-  static Image jumpLeft;
-  static Image jumpRight;
 
   PlayerState state;
   Vector2 prevNormal;
@@ -122,8 +113,6 @@ private:
   float rFrame;
 
 public:
-
-  static void loadAnimations();
   
   Player(float x, float y, float w, float h);
   void draw();
