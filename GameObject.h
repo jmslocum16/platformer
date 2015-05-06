@@ -100,20 +100,6 @@ using namespace std;
 class Player : public StaticObject
 {
 private:
-  static string walk_file;
-  static string face_file;
-  static string fall_file;
-  static string jump_file;
-  static int num_walk;
-
-  static Animation walkLeft;
-  static Animation walkRight;
-  static Image faceLeft;
-  static Image faceRight;
-  static Image fallLeft;
-  static Image fallRight;
-  static Image jumpLeft;
-  static Image jumpRight;
 
   PlayerState state;
   Vector2 prevNormal;
@@ -122,8 +108,6 @@ private:
   float rFrame;
 
 public:
-
-  static void loadAnimations();
   
   Player(float x, float y, float w, float h);
   void draw();
