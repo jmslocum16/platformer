@@ -13,6 +13,8 @@
 #include "Util.h"
 #include "ImageManager.h"
 
+#define LEVELS 9
+
 class GameState;
 
 struct MouseEvent
@@ -82,6 +84,11 @@ public:
   static Image fallRight;
   static Image jumpLeft;
   static Image jumpRight;
+
+  static Image levels[LEVELS];
+  static string levelFiles[LEVELS];
+
+  static Image testImage;
 
   // gravity well resources
   static string well_file;

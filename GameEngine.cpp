@@ -32,6 +32,21 @@ Image GameEngine::jumpRight;
 Image GameEngine::gravityWell;
 Image GameEngine::exitDoor;
 
+Image GameEngine::levels[LEVELS];
+string GameEngine::levelFiles[LEVELS] =
+{
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev",
+  "levels/example.lev"
+};
+Image GameEngine::testImage;
+
 void GameEngine::loadResources()
 {
   loadImage(&(face_file + l + e)[0], faceLeft);
@@ -68,6 +83,13 @@ void GameEngine::loadResources()
   loadImage(&(well_file + e)[0], gravityWell);
 
   loadImage(&(door_file + e)[0], exitDoor);
+
+  // either render to texture, or do something else here to make level thumbnails
+  for (int i = 0; i < LEVELS; i++)
+  {
+    loadImage("images/test.bmp", levels[i]);
+  }
+  loadImage("images/test.bmp", testImage);
 }
 
 void mouseFunc(int button, int state, int x, int y)
@@ -142,9 +164,10 @@ void GameEngine::Init()
   MainMenu::getSingleton()->Init();
 
   // level loading:
-  ActiveGame* level = loadLevel("levels/example.lev");
+  //ActiveGame* level = loadLevel("levels/example.lev");
 
-  ChangeState((GameState*)level);
+  //ChangeState((GameState*)level);
+  ChangeState(MainMenu::getSingleton());
   // audio init
   // ... other init?
   m_running = true;

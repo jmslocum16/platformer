@@ -212,7 +212,7 @@ void Player::collision(Vector2 normal, GameObject* other)
 
 void Player::move(float dt)
 {
-  print(state);
+ // print(state);
   drawPoint = drawPoint + velocity * dt;
   collisionObject->move(velocity * dt);
 }
