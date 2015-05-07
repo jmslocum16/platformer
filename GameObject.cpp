@@ -172,28 +172,27 @@ void Player::jump()
 
 void Player::collision(Vector2 normal)
 {
+  Vector2 up(0, 1);
+  float angleFromUp = acos(up * normal) * 180.0f / M_PI;
+
   if (state == SingleJump || state == DoubleJump)
   {
     Vector2 n = normal.normalize();
     float proj = velocity * n;
-    if (proj < 0 && velocity.y() < 0)
+
+    Vector2 collisionLoss = n * proj;
+    velocity = velocity - collisionLoss;
+    prevNormal = n;
+
+    if (abs(angleFromUp) <= 45.0)
     {
-      Vector2 collisionLoss = n * proj;
-      velocity = velocity - collisionLoss;
-      prevNormal = n;
       changeState(Ground);
-    }
-    else
-    {
-      /* Update: Not if you hit against a side wall while going upward */
-      // ya hit yo head. probs.
-      velocity = Vector2(velocity.x(), 0);
     }
   }
   else if (state == Ground)
   {
     Vector2 n = normal.normalize();
-    if (n.x() * n.x() < 0.5)
+    if (abs(angleFromUp) <= 45.0)
     {
       prevNormal = n;
     }
