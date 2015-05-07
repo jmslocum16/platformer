@@ -35,7 +35,7 @@ Image GameEngine::exitDoor;
 Image GameEngine::levels[LEVELS];
 string GameEngine::levelFiles[LEVELS] =
 {
-  "levels/example.lev",
+  "levels/level1.lev",
   "levels/example.lev",
   "levels/example.lev",
   "levels/example.lev",
