@@ -41,7 +41,7 @@ void MainMenu::HandleEvents(GameEngine* game)
           int x1 = (x + 1) / (2.0/3.0);
           int y1 = 3-(y + 1) / (2.0/3.0);
           ActiveGame* level = loadLevel(GameEngine::levelFiles[3*y1+x1].c_str());
-          GameEngine::getSingleton()->ChangeState((GameState*)level);
+          GameEngine::getSingleton()->PushState((GameState*)level);
         }
     }
 

@@ -209,7 +209,8 @@ void GameEngine::finishLevel() {
   /*if (hasNextLevel()) {
     loadNextLevel();
   }*/
-  restartLevel();
+  //restartLevel();
+  PopState();
 }
 
 void GameEngine::restartLevel() {
