@@ -63,8 +63,6 @@ ActiveGame* loadLevel(const char* filename) {
     }
 
     level->setMaxGravityWells(maxWells);
-    /*GravityWell* well = new GravityWell(1, -.5, false);
-    level->addGravityWell(well);*/
     file.close();
   }
 

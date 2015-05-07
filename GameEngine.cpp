@@ -130,6 +130,9 @@ void GameEngine::Init()
 	glutKeyboardFunc(keyboardFunc);
 	glutMouseFunc(mouseFunc);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_DST_ALPHA);
+
   // our GL init
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black and opaque
 

@@ -20,7 +20,7 @@ void StaticObject::draw()
 {
   Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
-	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
 }
 
 Vector2* StaticObject::getCenter() {
@@ -173,7 +173,7 @@ void Player::collision(Vector2 normal)
       velocity = Vector2(velocity.x(), 0);
     }
   }
-  if (state == Ground)
+  else if (state == Ground)
   {
     Vector2 n = normal.normalize();
     if (n.x() * n.x() < 0.5)
@@ -236,8 +236,13 @@ Image Player::getImage() {
 void Player::draw()
 {
   Image i = getImage();
-	glRasterPos2f(drawPoint.x(), drawPoint.y());
-	glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+  float posX = drawPoint.x() <= -1 ? -1 + EPSILON : drawPoint.x();
+  float posY = drawPoint.y() <= -1 ? -1 + EPSILON : drawPoint.y();
+	glRasterPos2f(posX, posY);
+	float moveX = posX - drawPoint.x();
+	float moveY = posY - drawPoint.y();
+	glBitmap(0,0,0,0,-moveX*GameEngine::getSingleton()->windowWidth/2,-moveY*GameEngine::getSingleton()->windowHeight/2,NULL);
+	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
   ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
@@ -291,14 +296,20 @@ GravityWell::GravityWell(double dx, double dy, bool pos) {
 void GravityWell::draw()
 {
   Image i = getImage();
-  glRasterPos2f(drawPoint.x(), drawPoint.y());
+  //glRasterPos2f(drawPoint.x(), drawPoint.y());
+  float posX = drawPoint.x() <= -1 ? -1 + EPSILON : drawPoint.x();
+  float posY = drawPoint.y() <= -1 ? -1 + EPSILON : drawPoint.y();
+	glRasterPos2f(posX, posY);
+	float moveX = posX - drawPoint.x();
+	float moveY = posY - drawPoint.y();
+	glBitmap(0,0,0,0,-moveX*GameEngine::getSingleton()->windowWidth/2,-moveY*GameEngine::getSingleton()->windowHeight/2,NULL);
   if (positive)
   {
-    glDrawPixels(i.width, i.height, GL_BGR, GL_UNSIGNED_BYTE, i.data);
+    glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
   }
   else
   {
-    glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+    glDrawPixels(i.width, i.height, GL_RGBA, GL_UNSIGNED_BYTE, i.data);
   }
   Vector2* center = getCenter();
   glColor3f(1.0, 1.0, 1.0);

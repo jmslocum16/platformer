@@ -53,5 +53,22 @@ unsigned char * readBMP(const char* FilePath, int &width, int &height)
     hFile.close();
     unsigned char * dat = new unsigned char[Pixels.size()];
     copy(Pixels.begin(), Pixels.end(), dat);
+    if (FileInfo[28] == 32)
+    {
+      // move alpha to end
+      int i = 0;
+      char t[3];
+      while (i < Pixels.size())
+      {
+        t[0] = dat[i+1];
+        t[1] = dat[i+2];
+        t[2] = dat[i+3];
+        dat[i+3] = (t[0] || t[1] || t[2] > 0) ? 1 : 0;
+        dat[i+0] = t[0];
+        dat[i+1] = t[1];
+        dat[i+2] = t[2];
+        i += 4;
+      }
+    }
     return dat;
 }
