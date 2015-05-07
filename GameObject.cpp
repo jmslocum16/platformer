@@ -170,39 +170,43 @@ void Player::jump()
   }
 }
 
-void Player::collision(Vector2 normal)
+void Player::collision(Vector2 normal, GameObject* other)
 {
-  Vector2 up(0, 1);
-  float angleFromUp = acos(up * normal) * 180.0f / M_PI;
+  if (dynamic_cast<Wall*>(other)) {
+    Vector2 up(0, 1);
+    float angleFromUp = acos(up * normal) * 180.0f / M_PI;
 
-  if (state == SingleJump || state == DoubleJump)
-  {
-    Vector2 n = normal.normalize();
-    float proj = velocity * n;
-
-    Vector2 collisionLoss = n * proj;
-    velocity = velocity - collisionLoss;
-    prevNormal = n;
-
-    if (abs(angleFromUp) <= 45.0)
+    if (state == SingleJump || state == DoubleJump)
     {
-      changeState(Ground);
-    }
-  }
-  else if (state == Ground)
-  {
-    Vector2 n = normal.normalize();
-    if (abs(angleFromUp) <= 45.0)
-    {
+      Vector2 n = normal.normalize();
+      float proj = velocity * n;
+
+      Vector2 collisionLoss = n * proj;
+      velocity = velocity - collisionLoss;
       prevNormal = n;
+
+      if (abs(angleFromUp) <= 45.0)
+      {
+        changeState(Ground);
+      }
     }
-    else
+    else if (state == Ground)
     {
-      changeState(SingleJump);
+      Vector2 n = normal.normalize();
+      if (abs(angleFromUp) <= 45.0)
+      {
+        prevNormal = n;
+      }
+      else
+      {
+        changeState(SingleJump);
+      }
+      float proj = velocity * n;
+      Vector2 collisionLoss = n * (velocity * n);
+      velocity = velocity - collisionLoss;
     }
-    float proj = velocity * n;
-    Vector2 collisionLoss = n * (velocity * n);
-    velocity = velocity - collisionLoss;
+  } else if (dynamic_cast<Exit*>(other)) {
+    GameEngine::getSingleton()->finishLevel();
   }
 }
 
@@ -297,10 +301,26 @@ void Wall::draw()
 Exit::Exit(double dx, double dy) {
   drawPoint = Vector2(dx, dy);
   image = &GameEngine::getSingleton()->exitDoor;
-  float h = 2*image->height / GameEngine::getSingleton()->windowWidth;
-  float w = 2*image->width / GameEngine::getSingleton()->windowHeight;
+  float h = 2.0*image->height / GameEngine::getSingleton()->windowWidth;
+  float w = 2.0*image->width / GameEngine::getSingleton()->windowHeight;
   Vector2 pts[4] = {Vector2(dx,dy), Vector2(dx+w,dy), Vector2(dx+w,dy+h), Vector2(dx, dy+h)};
   collisionObject = new ConvexPolygon(pts, 4); 
+}
+
+void Exit::draw() { 
+  Image i = getImage();
+  float h = 2*i.height / GameEngine::getSingleton()->windowWidth;
+  float w = 2*i.width / GameEngine::getSingleton()->windowHeight;
+ 
+  glRasterPos2f(drawPoint.x(), drawPoint.y()); 
+  glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+
+  glBegin(GL_LINE_LOOP);
+  glVertex2f(drawPoint.x(), drawPoint.y());
+  glVertex2f(drawPoint.x() + w, drawPoint.y());
+  glVertex2f(drawPoint.x() + w, drawPoint.y() + h);
+  glVertex2f(drawPoint.x(), drawPoint.y() + h);
+  glEnd();
 }
 
 GravityWell::GravityWell(double dx, double dy, bool pos) {

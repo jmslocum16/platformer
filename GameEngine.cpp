@@ -182,12 +182,15 @@ GameState* GameEngine::getCurrentState() {
 }
 
 void GameEngine::finishLevel() {
-  if (hasNextLevel()) {
+  cout << "reached exit!" << endl;
+  /*if (hasNextLevel()) {
     loadNextLevel();
-  }
+  }*/
+  restartLevel();
 }
 
 void GameEngine::restartLevel() {
+  cout << "restarting level" << endl;
   ActiveGame* oldGame = dynamic_cast<ActiveGame*>(getCurrentState());
   const char* fname = oldGame->getFname();
   oldGame->Cleanup();

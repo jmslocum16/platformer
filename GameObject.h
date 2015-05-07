@@ -23,7 +23,7 @@ public:
   virtual void draw() = 0;
   virtual void move(float dt) = 0;
   virtual void applyForces() = 0;
-  virtual void collision(Vector2 normal) = 0;
+  virtual void collision(Vector2 normal, GameObject* other) = 0;
   virtual Vector2* getCenter() = 0;
 };
 
@@ -65,7 +65,7 @@ public:
   void draw();
   void move(float dt) {}
   void applyForces() {}
-  void collision(Vector2 n) {}
+  void collision(Vector2 n, GameObject* other) {}
 };
 
 class Exit : public StaticObject
@@ -73,8 +73,9 @@ class Exit : public StaticObject
 public:
   Exit(double dx, double dy);
   void move(float dt) {}
-  void collision(Vector2 n) {}
+  void collision(Vector2 n, GameObject* other) {}
   void applyForces() {}
+  void draw();
 };
 
 class GravityWell : public StaticObject {
@@ -85,7 +86,7 @@ public:
   GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
   void applyForces() {}
-  void collision(Vector2 n) {}
+  void collision(Vector2 n, GameObject* other) {}
   bool isPositive() { return positive; }
   static void setFactor(double f) { factor = f; }
   void draw();
@@ -123,6 +124,6 @@ public:
   void right();
   bool changeState(PlayerState s);
   bool checkState(PlayerState s) { return state == s; }
-  void collision(Vector2 normal);
+  void collision(Vector2 normal, GameObject* other);
   Image getImage();
 };

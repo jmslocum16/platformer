@@ -20,6 +20,7 @@ void Simulator::stepSimulation(float dt)
     obj1->forces = Vector2(0,0);
     CollisionOutput best;
     best.hitFraction = numeric_limits<float>::infinity();
+    GameObject* bestObj;
 
     for (int j = 0; j < statics.size(); j++)
     {
@@ -31,6 +32,7 @@ void Simulator::stepSimulation(float dt)
       else if (coll.hitFraction < best.hitFraction)
       {
         best = coll;
+        bestObj = obj2;
       }
     }
 
@@ -68,7 +70,7 @@ void Simulator::stepSimulation(float dt)
     else
     {
       obj1->move(dt * best.hitFraction - EPSILON);
-      obj1->collision(best.hitNormal);
+      obj1->collision(best.hitNormal, bestObj);
     }
   }
 }
