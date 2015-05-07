@@ -313,7 +313,7 @@ void Exit::draw() {
   float w = 2*i.width / GameEngine::getSingleton()->windowHeight;
  
   glRasterPos2f(drawPoint.x(), drawPoint.y()); 
-  glDrawPixels(i.width, i.height, GL_RGB, GL_UNSIGNED_BYTE, i.data);
+  glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
 
   glBegin(GL_LINE_LOOP);
   glVertex2f(drawPoint.x(), drawPoint.y());

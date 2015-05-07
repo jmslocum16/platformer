@@ -29,6 +29,14 @@ void MainMenu::HandleEvents(GameEngine* game)
     MouseInput::iterator mouseEnd = game->mouseInput.end();
     KeyInput::iterator keyEnd = game->keyInput.end();
 
+    for (MouseInput::iterator iter = game->mouseInput.begin(); iter != mouseEnd; ++iter)
+    {
+        MouseEvent e = *iter;
+        if (e.state == GLUT_DOWN)
+        {
+            //do things
+        }
+    }
 
     for (KeyInput::iterator iter = game->keyInput.begin(); iter != keyEnd; ++iter)
     {
