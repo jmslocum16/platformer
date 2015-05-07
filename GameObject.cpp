@@ -169,6 +169,8 @@ void Player::collision(Vector2 normal)
     }
     else
     {
+
+      /* Update: Not if you hit against a side wall while going upward */
       // ya hit yo head. probs.
       velocity = Vector2(velocity.x(), 0);
     }
