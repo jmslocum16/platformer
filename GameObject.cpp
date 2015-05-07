@@ -134,16 +134,32 @@ void print(PlayerState state)
 
 void Player::left()
 {
-  Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
-  Vector2 moveDir = groundSlope * (groundSlope * Vector2(-RUN_SPEED, 0));
-  forces = forces + moveDir;
+  // Kind of hacky to check state, but it should work
+  if (checkState(Ground))
+  {
+    Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
+    Vector2 moveDir = groundSlope * (groundSlope * Vector2(-RUN_SPEED, 0));
+    forces = forces + moveDir; 
+  }
+  else
+  {
+    forces = forces + Vector2(-RUN_SPEED, 0);
+  }
 }
 
 void Player::right()
 {
-  Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
-  Vector2 moveDir = groundSlope * (groundSlope * Vector2(RUN_SPEED, 0));
-  forces = forces + moveDir;
+  // Kind of hacky to check state, but it should work
+  if (checkState(Ground))
+  {
+    Vector2 groundSlope = Vector2(prevNormal.y(), -prevNormal.x());
+    Vector2 moveDir = groundSlope * (groundSlope * Vector2(RUN_SPEED, 0));
+    forces = forces + moveDir; 
+  }
+  else
+  {
+    forces = forces + Vector2(RUN_SPEED, 0);
+  }
 }
 
 void Player::jump()
@@ -162,14 +178,13 @@ void Player::collision(Vector2 normal)
     float proj = velocity * n;
     if (proj < 0 && velocity.y() < 0)
     {
-      Vector2 collisionLoss = n * (velocity * n);
+      Vector2 collisionLoss = n * proj;
       velocity = velocity - collisionLoss;
       prevNormal = n;
       changeState(Ground);
     }
     else
     {
-
       /* Update: Not if you hit against a side wall while going upward */
       // ya hit yo head. probs.
       velocity = Vector2(velocity.x(), 0);
@@ -194,7 +209,7 @@ void Player::collision(Vector2 normal)
 
 void Player::move(float dt)
 {
-  //print(state);
+  print(state);
   drawPoint = drawPoint + velocity * dt;
   collisionObject->move(velocity * dt);
 }
