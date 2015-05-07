@@ -42,9 +42,10 @@ Vector2* AnimatedObject::getCenter() {
   return new Vector2(drawPoint.x() + i.width/2, drawPoint.y() + i.height/2);
 }
 
-Player::Player(float x, float y, float width, float height)
+Player::Player(float x, float y, float width, float height, float g)
 {
   drawPoint = Vector2(x,y);
+  gravity = g;
   forces = Vector2(0,0);
   velocity = Vector2(0,0);
   float h = GameEngine::getSingleton()->faceLeft.height / height*2;
@@ -62,7 +63,7 @@ void Player::applyForces()
   {
     case SingleJump:
     case DoubleJump: {
-      forces = forces + Vector2(0,-1.5); // apply gravity if falling
+      forces = forces + Vector2(0,- gravity); // apply gravity if falling
       Vector2* center = getCenter();
 
       GameEngine* ge = GameEngine::getSingleton();

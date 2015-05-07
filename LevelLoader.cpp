@@ -11,6 +11,9 @@ using namespace std;
  * Level Name
  * playerx playery
  * exitx exity
+ * maxwells
+ * gravitywellfactor
+ * earthgravityfactor
  * numwalls
  * for numwalls:
  *   p1x p1y p2x p2y
@@ -34,15 +37,18 @@ ActiveGame* loadLevel(const char* filename) {
     float exitX;
     float exitY;
     int maxWells;
-    float factor;
+    float wellFactor;
+    float earthFactor;
     file >> playerX;
     file >> playerY;
     file >> exitX;
     file >> exitY;
     file >> maxWells;
-    file >> factor;
-    GravityWell::setFactor(factor);
-    Player* p = new Player(playerX, playerY, w, h); // strip newline?
+    file >> wellFactor;
+    file >> earthFactor;
+    GravityWell::setFactor(wellFactor);
+    
+    Player* p = new Player(playerX, playerY, w, h, earthFactor); // strip newline?
 
     Exit* exit = new Exit(exitX, exitY);
     level->addStatic(exit);

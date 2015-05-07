@@ -113,9 +113,11 @@ private:
   float lFrame;
   float rFrame;
 
+  float gravity;
+
 public:
   
-  Player(float x, float y, float w, float h);
+  Player(float x, float y, float w, float h, float g);
   void draw();
   void applyForces();
   void move(float dt);
