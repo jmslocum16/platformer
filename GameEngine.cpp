@@ -85,10 +85,21 @@ void GameEngine::loadResources()
   loadImage(&(door_file + e)[0], exitDoor);
 
   // either render to texture, or do something else here to make level thumbnails
+  int tmpw = windowWidth, tmph = windowHeight;
   for (int i = 0; i < LEVELS; i++)
   {
-    loadImage("images/test.bmp", levels[i]);
+    Resize(tmpw / 3, tmph / 3);
+    ActiveGame* level = loadLevel(levelFiles[i].c_str());
+    level->Draw(this);
+    unsigned char* img = new unsigned char[4*windowWidth*windowHeight]; // RGBA
+    glReadBuffer(GL_BACK);
+    glReadPixels(0,0,windowWidth,windowHeight,GL_BGRA,GL_UNSIGNED_BYTE,img);
+    levels[i].width = windowWidth;
+    levels[i].height = windowHeight;
+    levels[i].data = img;
+    //loadImage("images/test.bmp", levels[i]);
   }
+  Resize(tmpw, tmph);
   loadImage("images/test.bmp", testImage);
 }
 
@@ -134,6 +145,19 @@ void GameEngine::Draw()
   }
 
 	glFlush();  // Render now
+}
+
+void GameEngine::Resize(int w, int h)
+{
+  glClear(GL_COLOR_BUFFER_BIT);
+  glViewport( 0, 0, w, h );
+  //glMatrixMode( GL_PROJECTION );
+  //glLoadIdentity();
+  gluOrtho2D( -1, 1, -1, 1 );
+
+  //glMatrixMode( GL_MODELVIEW );
+  windowWidth = w;
+  windowHeight = h;
 }
 
 void GameEngine::Init()

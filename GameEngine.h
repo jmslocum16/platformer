@@ -64,6 +64,8 @@ public:
     return singleton;
   }
 
+  void Resize(int w, int h);
+
   int windowWidth;
   int windowHeight;
 
