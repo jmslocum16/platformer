@@ -15,6 +15,7 @@ string GameEngine::jump_file = "images/Jump";
 int GameEngine::num_walk = 8; // 8 frames
 string GameEngine::well_file = "images/Well";
 string GameEngine::door_file = "images/door";
+string GameEngine::background_file = "images/background";
 
 string l = "Left";
 string r = "Right";
@@ -31,6 +32,7 @@ Image GameEngine::jumpRight;
 
 Image GameEngine::gravityWell;
 Image GameEngine::exitDoor;
+Image GameEngine::background;
 
 Image GameEngine::levels[LEVELS];
 string GameEngine::levelFiles[LEVELS] =
@@ -83,6 +85,7 @@ void GameEngine::loadResources()
   loadImage(&(well_file + e)[0], gravityWell);
 
   loadImage(&(door_file + e)[0], exitDoor);
+  loadImage(&(background_file + e)[0], background);
 
   // either render to texture, or do something else here to make level thumbnails
   int tmpw = windowWidth, tmph = windowHeight;
@@ -151,11 +154,8 @@ void GameEngine::Resize(int w, int h)
 {
   glClear(GL_COLOR_BUFFER_BIT);
   glViewport( 0, 0, w, h );
-  //glMatrixMode( GL_PROJECTION );
-  //glLoadIdentity();
   gluOrtho2D( -1, 1, -1, 1 );
 
-  //glMatrixMode( GL_MODELVIEW );
   windowWidth = w;
   windowHeight = h;
 }
@@ -186,12 +186,8 @@ void GameEngine::Init()
 
   // game state init
   MainMenu::getSingleton()->Init();
-
-  // level loading:
-  //ActiveGame* level = loadLevel("levels/example.lev");
-
-  //ChangeState((GameState*)level);
   ChangeState(MainMenu::getSingleton());
+
   // audio init
   // ... other init?
   m_running = true;

@@ -202,7 +202,6 @@ void Player::collision(Vector2 normal, GameObject* other)
       {
         changeState(SingleJump);
       }
-      float proj = velocity * n;
       Vector2 collisionLoss = n * (velocity * n);
       velocity = velocity - collisionLoss;
     }
@@ -213,7 +212,6 @@ void Player::collision(Vector2 normal, GameObject* other)
 
 void Player::move(float dt)
 {
- // print(state);
   drawPoint = drawPoint + velocity * dt;
   collisionObject->move(velocity * dt);
 }

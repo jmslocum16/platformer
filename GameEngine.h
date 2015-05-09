@@ -90,6 +90,8 @@ public:
   static Image levels[LEVELS];
   static string levelFiles[LEVELS];
 
+  static string background_file;
+  static Image background;
   static Image testImage;
 
   // gravity well resources

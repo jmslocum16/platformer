@@ -93,6 +93,9 @@ void ActiveGame::Update(GameEngine* game)
 
 void ActiveGame::Draw(GameEngine* game)
 {
+  glRasterPos2f(-1 + EPSILON, -1 + EPSILON);
+  Image i = GameEngine::background;
+	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
   for (int i = 0; i < objects.size(); i++)
   {
     objects[i]->draw();
