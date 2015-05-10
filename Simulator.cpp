@@ -82,13 +82,19 @@ void Simulator::stepSimulation(float dt)
     }
     else
     {
-      if (collisions[0].hitObject->passable())
+      int i;
+      for (i = 0; i < collisions.size(); i++)
       {
-        obj1->move(dt);
+        if (!collisions[i].hitObject->passable())
+        break;
+      }
+      if (i < collisions.size())
+      {
+        obj1->move(dt * collisions[i].hitFraction - EPSILON);
       }
       else
       {
-        obj1->move(dt * collisions[0].hitFraction - EPSILON);
+        obj1->move(dt);
       }
       obj1->collision(collisions);
     }
