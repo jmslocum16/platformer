@@ -82,7 +82,7 @@ void Simulator::stepSimulation(float dt)
     }
     else
     {
-      if (obj1->passable())
+      if (collisions[0].hitObject->passable())
       {
         obj1->move(dt);
       }

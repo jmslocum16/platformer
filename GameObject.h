@@ -153,5 +153,5 @@ public:
   bool checkState(PlayerState s) { return state == s; }
   void collision(std::vector<CollisionOutput> collisions);
   Image getImage();
-  bool passable() { return true; }
+  bool passable() { return false; }
 };
