@@ -396,6 +396,41 @@ GravityWell::GravityWell(double dx, double dy, bool pos) {
   drawPoint = Vector2(dx, dy);
   positive = pos;
   image = &GameEngine::getSingleton()->gravityWell;
+  rot = 0.0;
+}
+
+void GravityWell::getRotatedImage(Image* i) {
+  rot += GravityWell::factor/100;
+  double pi = 3.1415926535;
+  while (rot > 2 * pi) {
+    rot -= 2 * pi;
+  }
+  i->width = image->width;
+  i->height = image->height;
+  i->data = new unsigned char[i->width * i->height * 4];
+  for (int l = 0; l < i->height; l++) {
+    for (int j = 0; j < i->width; j++) {
+      double dy = 1 - (l + 0.5) / i->height - 0.5;
+      double dx = (j + 0.5) / i->width - 0.5;
+      double len = sqrt(dx * dx + dy * dy);
+      double theta = asin(dy/len);
+      if (dx < 0) theta = pi - theta;
+      theta -= rot;
+      int newj = (int)(i->width * (cos(theta) * len + .5));
+      int newi = i->height - 1 - (int)(i->height * (sin(theta) * len + .5));
+      for (int k = 0; k < 4; k++) {
+        int oldindex = 4 * (i->height*l + j)  + k;
+        int newindex = 4 * (i->height*newi + newj)  + k;
+        //newindex = oldindex;
+        if (newi < 0 || newi >= i->height || newj < 0 || newj >= i->width) {
+          i->data[oldindex] = 0;
+        } else {
+          i->data[oldindex] = image->data[newindex];
+        }
+      }
+    }
+  }
+  //i->data = image->data;
 }
 
 void GravityWell::draw()
@@ -404,17 +439,20 @@ void GravityWell::draw()
   //glRasterPos2f(drawPoint.x(), drawPoint.y());
   float posX = drawPoint.x() <= -1 ? -1 + EPSILON : drawPoint.x();
   float posY = drawPoint.y() <= -1 ? -1 + EPSILON : drawPoint.y();
-	glRasterPos2f(posX, posY);
-	float moveX = posX - drawPoint.x();
-	float moveY = posY - drawPoint.y();
-	glBitmap(0,0,0,0,-moveX*GameEngine::getSingleton()->windowWidth/2,-moveY*GameEngine::getSingleton()->windowHeight/2,NULL);
+  glRasterPos2f(posX, posY);
+  float moveX = posX - drawPoint.x();
+  float moveY = posY - drawPoint.y();
+  glBitmap(0,0,0,0,-moveX*GameEngine::getSingleton()->windowWidth/2,-moveY*GameEngine::getSingleton()->windowHeight/2,NULL);
+  Image rotatedImage;
+  getRotatedImage(&rotatedImage);
+   
   if (positive)
   {
-    glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
+    glDrawPixels(rotatedImage.width, rotatedImage.height, GL_BGRA, GL_UNSIGNED_BYTE, rotatedImage.data);
   }
   else
   {
-    glDrawPixels(i.width, i.height, GL_RGBA, GL_UNSIGNED_BYTE, i.data);
+    glDrawPixels(rotatedImage.width, rotatedImage.height, GL_RGBA, GL_UNSIGNED_BYTE, rotatedImage.data);
   }
   Vector2* center = getCenter();
   glColor3f(1.0, 1.0, 1.0);
@@ -422,6 +460,7 @@ void GravityWell::draw()
     glVertex2f(center->x(), center->y());
   glEnd();
   delete center;
+  delete rotatedImage.data;
 }
 
 Switch::Switch(double dx, double dy, bool isAdd) {

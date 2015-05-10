@@ -88,6 +88,8 @@ public:
 class GravityWell : public StaticObject {
 private:
   bool positive;
+  float rot;
+  void getRotatedImage(Image* i);
 public:
   static float factor;
   GravityWell(double dx, double dy, bool pos);
