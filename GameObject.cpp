@@ -230,6 +230,12 @@ void Player::collision(vector<CollisionOutput> collisions)
   last = other;
 
   if (dynamic_cast<Wall*>(other)) {
+    Wall* w = dynamic_cast<Wall*>(other);
+    if (w->deadly()) {
+      GameEngine::getSingleton()->restartLevel();
+      return;
+    }
+    
     Vector2 n = normal.normalize();
     Vector2 up(0, 1);
     float angleFromUp = acos(up * normal) * 180.0f / M_PI;
@@ -329,8 +335,9 @@ void Player::draw()
   glEnd();
 }
 
-Wall::Wall(float x1, float y1, float x2, float y2)
+Wall::Wall(float x1, float y1, float x2, float y2, bool ow)
 {
+  death = ow;
   pts = new Vector2[2];
   pts[0] = Vector2(x1, y1);
   pts[1] = Vector2(x2, y2);
@@ -341,18 +348,22 @@ Wall::Wall(float x1, float y1, float x2, float y2)
 
 void Wall::draw()
 {
-  glColor3f(1.0,0,0);
+  if (deadly()) {
+    glColor3f(1.0, 0, 0);
+  } else {
+    glColor3f(1.0, 1.0, 0.0);
+  }
   glBegin(GL_LINES);
   glVertex2f(pts[0].x(), pts[0].y());
   glVertex2f(pts[1].x(), pts[1].y());
   glEnd();
-  glColor3f(1.0, 1.0, 0.0);
+  /*glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
   ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   for (int i = 0; i < poly->n; i++) {
     glVertex2f(poly->pts[i].x(), poly->pts[i].y());
   }
-  glEnd();
+  glEnd();*/
 }
 
 Exit::Exit(double dx, double dy) {

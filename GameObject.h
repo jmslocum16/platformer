@@ -62,14 +62,16 @@ public:
 
 class Wall : public StaticObject
 {
+  bool death;
   Vector2* pts;         // for recovering angle in case we can draw image?
 public:
-  Wall(float x1, float y1, float x2, float y2);
+  Wall(float x1, float y1, float x2, float y2, bool ow);
   void draw();
   void move(float dt) {}
   void applyForces() {}
   void collision(std::vector<CollisionOutput> collisions) {}
   bool passable() { return false; }
+  bool deadly() { return death; }
 };
 
 class Exit : public StaticObject

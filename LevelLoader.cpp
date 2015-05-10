@@ -5,6 +5,13 @@
 
 using namespace std;
 
+Wall* loadWall(ifstream& file) {
+  float p1x, p1y, p2x, p2y;
+  bool deadly;
+  file >> p1x; file >> p1y; file >> p2x; file >> p2y;
+  file >> deadly;
+  return new Wall(p1x, p1y, p2x, p2y, deadly);      
+}
 
 /*
  * File format:
@@ -66,9 +73,7 @@ ActiveGame* loadLevel(const char* filename) {
     file >> numWalls;
     for (int i = 0; i < numWalls; i++)
     {
-      float p1x, p1y, p2x, p2y;
-      file >> p1x; file >> p1y; file >> p2x; file >> p2y;
-      Wall* w = new Wall(p1x, p1y, p2x, p2y);
+      Wall* w = loadWall(file);
       level->addStatic(w);
     }
 
@@ -81,9 +86,7 @@ ActiveGame* loadLevel(const char* filename) {
       file >> x; file >> y; file >> add; file >> numAffectedWalls;
       Switch* s = new Switch(x, y, add);
       for (int j = 0; j < numAffectedWalls; j++) {
-        float p1x, p1y, p2x, p2y;
-        file >> p1x; file >> p1y; file >> p2x; file >> p2y;
-        Wall* w = new Wall(p1x, p1y, p2x, p2y);
+        Wall* w = loadWall(file);
         if (!add)
           level->addStatic(w);
         s->addObject(w);
