@@ -26,8 +26,17 @@ void Simulator::stepSimulation(float dt)
     {
       GameObject* obj2 = statics[j];
       CollisionOutput coll = collides(*obj1->collisionObject, obj1->velocity*dt, *obj2->collisionObject);
+
       if (coll.hitFraction >= 0.0)
       {
+        if (coll.hitFraction <= EPSILON)
+        {
+          if (coll.hitNormal * obj1->velocity > 0)
+          {
+            continue;
+          }
+        }
+
         coll.hitObject = obj2;
         collisions.push_back(coll);
       }
@@ -50,7 +59,7 @@ void Simulator::stepSimulation(float dt)
         for (int j = 0; j < statics.size(); j++)
         {
           GameObject* obj2 = statics[j];
-          CollisionOutput coll = collides(*obj1->collisionObject, Vector2(0, -EPSILON * 10), *obj2->collisionObject);
+          CollisionOutput coll = collides(*obj1->collisionObject, Vector2(0, -EPSILON * 100), *obj2->collisionObject);
 
           if (coll.hitFraction > EPSILON)
           {
