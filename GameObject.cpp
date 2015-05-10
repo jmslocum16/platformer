@@ -262,6 +262,9 @@ void Player::collision(vector<CollisionOutput> collisions)
     }
   } else if (dynamic_cast<Exit*>(other)) {
     GameEngine::getSingleton()->finishLevel();
+  } else if (dynamic_cast<Switch*>(other)) {
+    Switch* s = dynamic_cast<Switch*>(other);
+    s->press();
   }
 }
 

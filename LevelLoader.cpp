@@ -79,7 +79,6 @@ ActiveGame* loadLevel(const char* filename) {
       int add;
       int numAffectedWalls;
       file >> x; file >> y; file >> add; file >> numAffectedWalls;
-      cout << "add: " << add << ", numAffectedWalls: " << numAffectedWalls << endl;
       Switch* s = new Switch(x, y, add);
       for (int j = 0; j < numAffectedWalls; j++) {
         float p1x, p1y, p2x, p2y;
