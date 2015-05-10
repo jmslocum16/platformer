@@ -59,6 +59,12 @@ void Simulator::stepSimulation(float dt)
         for (int j = 0; j < statics.size(); j++)
         {
           GameObject* obj2 = statics[j];
+
+          if (obj2->passable())
+          {
+            continue;
+          }
+
           CollisionOutput coll = collides(*obj1->collisionObject, Vector2(0, -EPSILON * 100), *obj2->collisionObject);
 
           if (coll.hitFraction > EPSILON)
@@ -76,7 +82,14 @@ void Simulator::stepSimulation(float dt)
     }
     else
     {
-      obj1->move(dt * collisions[0].hitFraction - EPSILON);
+      if (obj1->passable())
+      {
+        obj1->move(dt);
+      }
+      else
+      {
+        obj1->move(dt * collisions[0].hitFraction - EPSILON);
+      }
       obj1->collision(collisions);
     }
   }

@@ -218,7 +218,6 @@ void Player::collision(vector<CollisionOutput> collisions)
    * -- Moving down
    * --- hitting walls on side, hitting ground (transition), having something push you down
    */
-  print(state);
 
   if (collisions.empty())
   {
