@@ -3,14 +3,13 @@
 #include "assert.h"
 #include "ConvexShape.h"
 #include "Vector2.h"
+#include <limits>
 
 class ConvexPolygon : public ConvexShape
-{
-
-	
-
+{	
 public:
 	Vector2* pts;
+	Vector2 range;
 	int n;
   ConvexPolygon()
   {
@@ -23,11 +22,20 @@ public:
 	{
 		assert(numPoints > 0);
 		pts = new Vector2[numPoints];
-
+		float min = std::numeric_limits<float>::infinity();
+		float max = -std::numeric_limits<float>::infinity();
 		for (int i = 0; i < numPoints; ++i)
 		{
 			pts[i] = points[i];
+		  min = std::min(min, pts[i].y());
+		  max = std::max(max, pts[i].y());
 		}
+		range = Vector2(min, max);
+	}
+
+	Vector2 getRange()
+	{
+    return range;
 	}
 
   void move(Vector2 dir)

@@ -95,6 +95,24 @@ void Player::applyForces()
         delete wellCenter;
       }
       delete center;
+
+      Vector2 up(0, 1);
+      float angleFromUp = acos(up * prevNormal) * 180.0f / M_PI;
+      float proj = prevNormal * forces;
+      if (angleFromUp > 45 && angleFromUp < 135 && proj < 0)
+      {
+        Vector2 collRange = last->collisionObject->getRange();
+        Vector2 yRange = collisionObject->getRange();
+        float playerSize = yRange.y() - yRange.x();
+        Vector2 ourRange = Vector2(drawPoint.y(), drawPoint.y() + playerSize);
+        if (collRange.x() < ourRange.y() && ourRange.x() < collRange.y())
+        {
+          // remove force component perpindicular to the wall
+          Vector2 collisionLoss = prevNormal * proj;
+          forces = forces - collisionLoss;
+        }
+      }
+      
       break; }
     case Ground:
       forces = forces + velocity * -0.95;
@@ -209,14 +227,15 @@ void Player::collision(vector<CollisionOutput> collisions)
   CollisionOutput closest = collisions[0];
   Vector2 normal = closest.hitNormal;
   GameObject* other = closest.hitObject;
+  last = other;
 
   if (dynamic_cast<Wall*>(other)) {
+    Vector2 n = normal.normalize();
     Vector2 up(0, 1);
     float angleFromUp = acos(up * normal) * 180.0f / M_PI;
 
     if (state == SingleJump || state == DoubleJump)
     {
-      Vector2 n = normal.normalize();
       float proj = velocity * n;
 
       Vector2 collisionLoss = n * proj;
@@ -230,7 +249,6 @@ void Player::collision(vector<CollisionOutput> collisions)
     }
     else if (state == Ground)
     {
-      Vector2 n = normal.normalize();
       if (abs(angleFromUp) <= 45.0)
       {
         prevNormal = n;

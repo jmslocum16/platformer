@@ -14,6 +14,11 @@ public:
 	{
 	}
 
+	Vector2 getRange()
+	{
+    return Vector2(c.y() - r, c.y() + r);
+	}
+
   void move(Vector2 dir)
   {
     c = c + dir;

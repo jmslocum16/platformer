@@ -16,6 +16,7 @@ public:
   Vector2 forces;
   Vector2 velocity;
 public:
+  GameObject* last;
   GameObject()
   {
     

@@ -14,6 +14,11 @@ public:
 	{
 	}
 
+	Vector2 getRange()
+	{
+	  return Vector2(std::min(centerA.y(), centerB.y()) - radius, std::max(centerA.y(), centerB.y()) + radius);
+	}
+
   void move(Vector2 dir)
   {
     centerA = centerA + dir;
