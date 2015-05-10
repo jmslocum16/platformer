@@ -23,7 +23,8 @@ public:
   void setMaxGravityWells(int n) { max_wells = n; }
   void removeWell();
   void addGravityWell(GravityWell* well);
-  vector<GravityWell*> getWells() { return wells; }
+  void addPermanentWell(GravityWell*);
+  vector<GravityWell*> getWells();
   void setPlayer(Player* p) { player = p; }
 
   void addStatic(GameObject* obj);
@@ -36,6 +37,7 @@ private:
   const char* fname;
   vector<GameObject*> objects;
   vector<GravityWell*> wells;
+  vector<GravityWell*> permanentWells;
   Player* player;
   Simulator* sim;
   bool exit_reached;

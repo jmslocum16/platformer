@@ -94,6 +94,18 @@ ActiveGame* loadLevel(const char* filename) {
       level->addStatic(s);
     }
 
+    long numWells;
+    file >> numWells;
+    for (int i = 0; i < numWells; i++)
+    {
+      float x, y;
+      bool positive;
+      file >> x;
+      file >> y;
+      file >> positive;
+      level->addPermanentWell(new GravityWell(x,y,positive));
+    }
+
     level->setMaxGravityWells(maxWells);
     file.close();
   }

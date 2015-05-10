@@ -139,6 +139,12 @@ void ActiveGame::removeWell()
 	delete well;
 }
 
+void ActiveGame::addPermanentWell(GravityWell* well)
+{
+  permanentWells.push_back(well);
+  objects.push_back(well);
+}
+
 void ActiveGame::addGravityWell(GravityWell* well) {
   if (wells.size() == max_wells)
   {
@@ -148,3 +154,10 @@ void ActiveGame::addGravityWell(GravityWell* well) {
   objects.push_back(well);
 }
 
+vector<GravityWell*> ActiveGame::getWells()
+{
+  vector<GravityWell*> ret;
+  ret.insert(ret.end(), wells.begin(), wells.end());
+  ret.insert(ret.end(), permanentWells.begin(), permanentWells.end());
+  return ret;
+}
