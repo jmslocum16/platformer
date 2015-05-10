@@ -3,6 +3,7 @@
 #include <vector>
 #include "Vector2.h"
 #include "ImageManager.h"
+#include "CollisionOutput.h"
 
 class ConvexShape;
 
@@ -23,7 +24,7 @@ public:
   virtual void draw() = 0;
   virtual void move(float dt) = 0;
   virtual void applyForces() = 0;
-  virtual void collision(Vector2 normal, GameObject* other) = 0;
+  virtual void collision(std::vector<CollisionOutput> collisions) = 0;
   virtual Vector2* getCenter() = 0;
 };
 
@@ -65,7 +66,7 @@ public:
   void draw();
   void move(float dt) {}
   void applyForces() {}
-  void collision(Vector2 n, GameObject* other) {}
+  void collision(std::vector<CollisionOutput> collisions) {}
 };
 
 class Exit : public StaticObject
@@ -73,7 +74,7 @@ class Exit : public StaticObject
 public:
   Exit(double dx, double dy);
   void move(float dt) {}
-  void collision(Vector2 n, GameObject* other) {}
+  void collision(std::vector<CollisionOutput> collisions) {}
   void applyForces() {}
   void draw();
 };
@@ -86,7 +87,7 @@ public:
   GravityWell(double dx, double dy, bool pos);
   void move(float dt) {}
   void applyForces() {}
-  void collision(Vector2 n, GameObject* other) {}
+  void collision(std::vector<CollisionOutput> collisions) {}
   bool isPositive() { return positive; }
   static void setFactor(double f) { factor = f; }
   void draw();
@@ -126,6 +127,6 @@ public:
   void right();
   bool changeState(PlayerState s);
   bool checkState(PlayerState s) { return state == s; }
-  void collision(Vector2 normal, GameObject* other);
+  void collision(std::vector<CollisionOutput> collisions);
   Image getImage();
 };

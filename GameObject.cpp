@@ -171,8 +171,38 @@ void Player::jump()
   }
 }
 
-void Player::collision(Vector2 normal, GameObject* other)
+void Player::collision(vector<CollisionOutput> collisions)
 {
+
+  /*
+   * Thoughts on collision detection for the player:
+   * 
+   * ~ We're going to have to consider mulitple cases for 0 hit fractions.
+   * - Ground State
+   * -- We're continually colliding with at least one wall. This means that we have at least
+   * one collision result with a hit fraction of 0.
+   * --- Should we gather all of the hit fractions of 0 and interpolate the normal?
+   * --- What if another hit fraction exists that we will begin to collide with? We're not
+   * going to hit it until after a hit fraction of 0, so we technically need to consider
+   * more than a single collision result.
+   * ---- Should we return multiple collisions hit sorted by their hit fraction? Probably
+   * --- We should ignore hit fractions of 0 whose normal is in the same direction of our movement.
+   * - Jump State
+   * -- Moving up
+   * --- hitting walls on side, hitting head on wall, having something push you up
+   * -- Moving down
+   * --- hitting walls on side, hitting ground (transition), having something push you down
+   */
+
+  if (collisions.empty())
+  {
+    return;
+  }
+
+  CollisionOutput closest = collisions[0];
+  Vector2 normal = closest.hitNormal;
+  GameObject* other = closest.hitObject;
+
   if (dynamic_cast<Wall*>(other)) {
     Vector2 up(0, 1);
     float angleFromUp = acos(up * normal) * 180.0f / M_PI;

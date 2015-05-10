@@ -27,13 +27,6 @@ struct MinkowskiEdge
 	int index;
 };
 
-struct CollisionOutput
-{
-	float hitFraction;
-	float depth;
-	Vector2 hitNormal;
-};
-
 Vector2 support(const ConvexShape& a, const ConvexShape& b, const Vector2& d);
 bool containsOrigin(std::vector<Vector2>& simplex, Vector2& d);
 GJKOutput collides(const ConvexShape& a, const ConvexShape& b);

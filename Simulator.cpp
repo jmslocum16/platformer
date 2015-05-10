@@ -1,8 +1,10 @@
 #include "Simulator.h"
 #include "GJK.cc"
+#include "Util.h"
+
 #include <iostream>
 #include <limits>
-#include "Util.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -18,33 +20,29 @@ void Simulator::stepSimulation(float dt)
       obj1->velocity = Vector2(0,0);
 
     obj1->forces = Vector2(0,0);
-    CollisionOutput best;
-    best.hitFraction = numeric_limits<float>::infinity();
-    GameObject* bestObj;
 
+    vector<CollisionOutput> collisions;
     for (int j = 0; j < statics.size(); j++)
     {
       GameObject* obj2 = statics[j];
       CollisionOutput coll = collides(*obj1->collisionObject, obj1->velocity*dt, *obj2->collisionObject);
-      if (coll.hitFraction < 0)
+      if (coll.hitFraction >= 0.0)
       {
-      }
-      else if (coll.hitFraction < best.hitFraction)
-      {
-        best = coll;
-        bestObj = obj2;
+        coll.hitObject = obj2;
+        collisions.push_back(coll);
       }
     }
 
-    if (best.hitFraction == numeric_limits<float>::infinity())
+    sort(collisions.begin(), collisions.end());
+
+    if (collisions.empty())
     {
       obj1->move(dt);
-
       Player* p = dynamic_cast<Player*>(obj1);
 
       // Horrible performance, but should work:
       // If we can collide with something below us within a reasonable distance,
-      // in this case Epsilon * 10 distance away, then we're on the ground. Otherwise,
+      // in this case EPSILON * 10 distance away, then we're on the ground. Otherwise,
       // we're falling.
       if (p && p->checkState(Ground))
       {
@@ -69,8 +67,8 @@ void Simulator::stepSimulation(float dt)
     }
     else
     {
-      obj1->move(dt * best.hitFraction - EPSILON);
-      obj1->collision(best.hitNormal, bestObj);
+      obj1->move(dt * collisions[0].hitFraction - EPSILON);
+      obj1->collision(collisions);
     }
   }
 }
