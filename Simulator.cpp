@@ -82,21 +82,37 @@ void Simulator::stepSimulation(float dt)
     }
     else
     {
-      int i;
-      for (i = 0; i < collisions.size(); i++)
+      int firstIndex = -1;
+      std::vector<CollisionOutput> passables;
+      std::vector<CollisionOutput> nonPassables;
+      for (int i = 0; i < collisions.size(); ++i)
       {
-        if (!collisions[i].hitObject->passable())
-        break;
+        if (collisions[i].hitObject->passable())
+        {
+          passables.push_back(collisions[i]);
+          obj1->collision(passables);
+          passables.clear();
+        }
+        else
+        {
+          firstIndex = i;
+          for (int j = i; j < collisions.size(); ++j)
+          {
+            nonPassables.push_back(collisions[i]);
+          }
+          break;
+        }
       }
-      if (i < collisions.size())
-      {
-        obj1->move(dt * collisions[i].hitFraction - EPSILON);
-      }
-      else
+
+      if (nonPassables.empty())
       {
         obj1->move(dt);
       }
-      obj1->collision(collisions);
+      else
+      {
+        obj1->move(dt * collisions[firstIndex].hitFraction - EPSILON);        
+        obj1->collision(nonPassables);
+      }
     }
   }
 }
