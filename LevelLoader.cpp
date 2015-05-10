@@ -17,6 +17,10 @@ using namespace std;
  * numwalls
  * for numwalls:
  *   p1x p1y p2x p2y
+ * numswitches
+ * sx sy add numaffectedwalls
+ * for numaffectedwalls:
+ *   p1x p1y p2x p2y
  */
 ActiveGame* loadLevel(const char* filename) {
   ActiveGame* level = new ActiveGame(filename);
@@ -53,7 +57,7 @@ ActiveGame* loadLevel(const char* filename) {
     Exit* exit = new Exit(exitX, exitY);
     level->addStatic(exit);
 
-	  level->addDynamic(p);
+    level->addDynamic(p);
     level->setPlayer(p);
 
 
@@ -66,6 +70,26 @@ ActiveGame* loadLevel(const char* filename) {
       file >> p1x; file >> p1y; file >> p2x; file >> p2y;
       Wall* w = new Wall(p1x, p1y, p2x, p2y);
       level->addStatic(w);
+    }
+
+    long numSwitches;
+    file >> numSwitches;
+    for (int i = 0; i < numSwitches; i++) {
+      float x, y;
+      int add;
+      int numAffectedWalls;
+      file >> x; file >> y; file >> add; file >> numAffectedWalls;
+      cout << "add: " << add << ", numAffectedWalls: " << numAffectedWalls << endl;
+      Switch* s = new Switch(x, y, add);
+      for (int j = 0; j < numAffectedWalls; j++) {
+        float p1x, p1y, p2x, p2y;
+        file >> p1x; file >> p1y; file >> p2x; file >> p2y;
+        Wall* w = new Wall(p1x, p1y, p2x, p2y);
+        if (!add)
+          level->addStatic(w);
+        s->addObject(w);
+      }
+      level->addStatic(s);
     }
 
     level->setMaxGravityWells(maxWells);

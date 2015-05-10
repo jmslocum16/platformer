@@ -408,3 +408,37 @@ void GravityWell::draw()
   glEnd();
   delete center;
 }
+
+Switch::Switch(double dx, double dy, bool isAdd) {
+  drawPoint = Vector2(dx, dy);
+  on = true;
+  add = isAdd;
+  // TODO real images
+  image = &GameEngine::getSingleton()->testImage;
+  imageOff = &GameEngine::getSingleton()->testImage;
+
+  float h = 2.0*image->height / GameEngine::getSingleton()->windowWidth;
+  float w = 2.0*image->width / GameEngine::getSingleton()->windowHeight;
+  Vector2 pts[4] = {Vector2(dx,dy), Vector2(dx+w,dy), Vector2(dx+w,dy+h), Vector2(dx, dy+h)};
+  collisionObject = new ConvexPolygon(pts, 4);
+}
+
+void Switch::press() {
+  if (on) {
+    cout << "pressing switch" << endl;
+    on = false;
+    if (add) {
+      
+    } else {
+      
+    }
+  }
+}
+
+Image Switch::getImage() {
+  return on ? *image : *imageOff;
+}
+
+void Switch::addObject(GameObject* obj) {
+  toModify.push_back(obj);
+}

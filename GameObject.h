@@ -27,7 +27,7 @@ public:
   virtual void applyForces() = 0;
   virtual void collision(std::vector<CollisionOutput> collisions) = 0;
   virtual Vector2* getCenter() = 0;
-  virtual bool impassable() = 0;
+  virtual bool passable() = 0;
 };
 
 class StaticObject : public GameObject
@@ -69,7 +69,7 @@ public:
   void move(float dt) {}
   void applyForces() {}
   void collision(std::vector<CollisionOutput> collisions) {}
-  bool impassable() { return true; }
+  bool passable() { return false; }
 };
 
 class Exit : public StaticObject
@@ -80,7 +80,7 @@ public:
   void collision(std::vector<CollisionOutput> collisions) {}
   void applyForces() {}
   void draw();
-  bool impassable() { return false; }
+  bool passable() { return true; }
 };
 
 class GravityWell : public StaticObject {
@@ -95,7 +95,24 @@ public:
   bool isPositive() { return positive; }
   static void setFactor(double f) { factor = f; }
   void draw();
-  bool impassable() { return false; }
+  bool passable() { return true; }
+};
+
+class Switch : public StaticObject {
+private:
+  bool on;
+  bool add;
+  Image* imageOff;
+  std::vector<GameObject*> toModify;
+public:
+  Switch(double dx, double dy, bool add);
+  void press();
+  Image getImage();
+  void addObject(GameObject* obj);
+  void move(float dt) {}
+  void applyForces() {}
+  void collision(std::vector<CollisionOutput> collisions) {}
+  bool passable() { return true; }
 };
 
 // Dynamic objects
@@ -134,5 +151,5 @@ public:
   bool checkState(PlayerState s) { return state == s; }
   void collision(std::vector<CollisionOutput> collisions);
   Image getImage();
-  bool impassable() { return false; }
+  bool passable() { return true; }
 };
