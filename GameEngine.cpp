@@ -16,6 +16,8 @@ int GameEngine::num_walk = 8; // 8 frames
 string GameEngine::well_file = "images/Well";
 string GameEngine::door_file = "images/door";
 string GameEngine::background_file = "images/background";
+string GameEngine::button_on_file = "images/button-on";
+string GameEngine::button_off_file = "images/button-off";
 
 string l = "Left";
 string r = "Right";
@@ -33,6 +35,9 @@ Image GameEngine::jumpRight;
 Image GameEngine::gravityWell;
 Image GameEngine::exitDoor;
 Image GameEngine::background;
+
+Image GameEngine::buttonOnImage;
+Image GameEngine::buttonOffImage;
 
 Image GameEngine::levels[LEVELS];
 string GameEngine::levelFiles[LEVELS] =
@@ -86,6 +91,9 @@ void GameEngine::loadResources()
 
   loadImage(&(door_file + e)[0], exitDoor);
   loadImage(&(background_file + e)[0], background);
+
+  loadImage(&(button_on_file + e)[0], buttonOnImage);
+  loadImage(&(button_off_file + e)[0], buttonOffImage);
 
   // either render to texture, or do something else here to make level thumbnails
   int tmpw = windowWidth, tmph = windowHeight;

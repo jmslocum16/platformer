@@ -101,6 +101,11 @@ public:
   static string door_file;
   static Image exitDoor;
 
+  static string button_on_file;
+  static Image buttonOnImage;
+  static string button_off_file;
+  static Image buttonOffImage;
+
 private:
 
   void loadResources();

@@ -428,9 +428,8 @@ Switch::Switch(double dx, double dy, bool isAdd) {
   drawPoint = Vector2(dx, dy);
   on = true;
   add = isAdd;
-  // TODO real images
-  image = &GameEngine::getSingleton()->testImage;
-  imageOff = &GameEngine::getSingleton()->testImage;
+  image = &GameEngine::getSingleton()->buttonOnImage;
+  imageOff = &GameEngine::getSingleton()->buttonOffImage;
 
   float h = 2.0*image->height / GameEngine::getSingleton()->windowWidth;
   float w = 2.0*image->width / GameEngine::getSingleton()->windowHeight;
