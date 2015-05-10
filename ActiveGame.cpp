@@ -66,7 +66,7 @@ void ActiveGame::HandleEvents(GameEngine* game)
                 player->right();
                 break;
             case 27:
-                GameEngine::getSingleton()->Quit();
+                GameEngine::getSingleton()->PopState();
                 break;
             case 'r':
                 GameEngine::getSingleton()->restartLevel();

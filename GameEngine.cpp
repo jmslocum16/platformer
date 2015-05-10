@@ -38,14 +38,14 @@ Image GameEngine::levels[LEVELS];
 string GameEngine::levelFiles[LEVELS] =
 {
   "levels/level1.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev",
-  "levels/example.lev"
+  "levels/level2.lev",
+  "levels/level3.lev",
+  "levels/level4.lev",
+  "levels/level5.lev",
+  "levels/level6.lev",
+  "levels/level7.lev",
+  "levels/level8.lev",
+  "levels/level9.lev"
 };
 Image GameEngine::testImage;
 
