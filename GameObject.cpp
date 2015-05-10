@@ -439,7 +439,6 @@ Switch::Switch(double dx, double dy, bool isAdd) {
 
 void Switch::press() {
   if (on) {
-    cout << "pressing switch" << endl;
     on = false;
     ActiveGame* current = dynamic_cast<ActiveGame*>(GameEngine::getSingleton()->getCurrentState());
     for (std::vector<GameObject*>::iterator iter = toModify.begin(); iter != toModify.end(); iter++) {
