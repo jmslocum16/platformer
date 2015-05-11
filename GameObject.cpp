@@ -58,9 +58,9 @@ Player::Player(float x, float y, float width, float height, float g)
   float x0 = x + iw;
   float hexW = iw / 4.0;
   float hexH = 2*ih/1.1;
-  //Vector2 pts[4] = {Vector2(x+7.0/width,y), Vector2(x+7.0/width,y+h), Vector2(x+w-7.0/width,y+h), Vector2(x+w-7.0/width, y)};
-  Vector2 pts[6] = {Vector2(x0,y), Vector2(x0+hexW,y+hexH/3.0), Vector2(x0+hexW,y+2*hexH/3.0), Vector2(x0, y+hexH), Vector2(x0-hexW-0.1*iw, y+2*hexH/3.0), Vector2(x0-hexW-0.1*iw, y+hexH/3.0)};
-  collisionObject = new ConvexPolygon(pts, 6);
+  Vector2 pts[4] = {Vector2(x + w/3,y), Vector2(x+w/3,y+h), Vector2(x+2*w/3,y+h), Vector2(x+2*w/3, y)};
+  // Vector2 pts[6] = {Vector2(x0,y), Vector2(x0+hexW,y+hexH/3.0), Vector2(x0+hexW,y+2*hexH/3.0), Vector2(x0, y+hexH), Vector2(x0-hexW-0.1*iw, y+2*hexH/3.0), Vector2(x0-hexW-0.1*iw, y+hexH/3.0)};
+  collisionObject = new ConvexPolygon(pts, 4);
   state = SingleJump;
   lFrame = 0;
   rFrame = 0;
