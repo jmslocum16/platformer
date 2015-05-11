@@ -43,9 +43,12 @@ void ActiveGame::HandleEvents(GameEngine* game)
               break;
             case GLUT_LEFT_BUTTON:
             case GLUT_RIGHT_BUTTON:
-              GravityWell* well = new GravityWell(x - GameEngine::gravityWell.width / (float)GameEngine::getSingleton()->windowWidth,
+              if (max_wells)
+              {
+                GravityWell* well = new GravityWell(x - GameEngine::gravityWell.width / (float)GameEngine::getSingleton()->windowWidth,
                                                   y - GameEngine::gravityWell.height / (float)GameEngine::getSingleton()->windowHeight, e.button == GLUT_LEFT_BUTTON);
-              addGravityWell(well);
+                addGravityWell(well);
+              }
               break;
           }
         }
