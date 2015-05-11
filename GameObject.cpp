@@ -58,9 +58,9 @@ Player::Player(float x, float y, float width, float height, float g)
   float x0 = x + iw;
   float hexW = iw / 4.0;
   float hexH = 2*ih/1.1;
-  Vector2 pts[4] = {Vector2(x+7.0/width,y), Vector2(x+7.0/width,y+h), Vector2(x+w-7.0/width,y+h), Vector2(x+w-7.0/width, y)};
-  //Vector2 pts[6] = {Vector2(x0,y), Vector2(x0+hexW,y+hexH/3.0), Vector2(x0+hexW,y+2*hexH/3.0), Vector2(x0, y+hexH), Vector2(x0-hexW-0.1*iw, y+2*hexH/3.0), Vector2(x0-hexW, y+hexH/3.0)};
-  collisionObject = new ConvexPolygon(pts, 4);
+  //Vector2 pts[4] = {Vector2(x+7.0/width,y), Vector2(x+7.0/width,y+h), Vector2(x+w-7.0/width,y+h), Vector2(x+w-7.0/width, y)};
+  Vector2 pts[6] = {Vector2(x0,y), Vector2(x0+hexW,y+hexH/3.0), Vector2(x0+hexW,y+2*hexH/3.0), Vector2(x0, y+hexH), Vector2(x0-hexW-0.1*iw, y+2*hexH/3.0), Vector2(x0-hexW-0.1*iw, y+hexH/3.0)};
+  collisionObject = new ConvexPolygon(pts, 6);
   state = SingleJump;
   lFrame = 0;
   rFrame = 0;
@@ -117,7 +117,7 @@ void Player::applyForces()
       
       break; }
     case Ground:
-      forces = forces + velocity * -0.95;
+      forces = forces + velocity * -5;
     default:
       break;
   }
@@ -331,13 +331,13 @@ void Player::draw()
 	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
 	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
 	glPixelZoom(1,1);
-  /*ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
+  ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
   for (int i = 0; i < poly->n; i++) {
     glVertex2f(poly->pts[i].x(), poly->pts[i].y());
   }
-  glEnd();*/
+  glEnd();
 }
 
 Wall::Wall(float x1, float y1, float x2, float y2, bool ow)
