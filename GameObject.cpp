@@ -20,7 +20,9 @@ void StaticObject::draw()
 {
   Image i = getImage();
 	glRasterPos2f(drawPoint.x(), drawPoint.y());
+	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
 	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
+	glPixelZoom(1,1);
 }
 
 Vector2* StaticObject::getCenter() {
@@ -236,7 +238,7 @@ void Player::collision(vector<CollisionOutput> collisions)
       GameEngine::getSingleton()->restartLevel();
       return;
     }
-    
+
     Vector2 n = normal.normalize();
     Vector2 up(0, 1);
     float angleFromUp = acos(up * normal) * 180.0f / M_PI;
@@ -326,14 +328,16 @@ void Player::draw()
 	float moveX = posX - drawPoint.x();
 	float moveY = posY - drawPoint.y();
 	glBitmap(0,0,0,0,-moveX*GameEngine::getSingleton()->windowWidth/2,-moveY*GameEngine::getSingleton()->windowHeight/2,NULL);
+	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
 	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
-  ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
+	glPixelZoom(1,1);
+  /*ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
   for (int i = 0; i < poly->n; i++) {
     glVertex2f(poly->pts[i].x(), poly->pts[i].y());
   }
-  glEnd();
+  glEnd();*/
 }
 
 Wall::Wall(float x1, float y1, float x2, float y2, bool ow)
@@ -382,7 +386,9 @@ void Exit::draw() {
   float w = 2*i.width / GameEngine::getSingleton()->windowHeight;
  
   glRasterPos2f(drawPoint.x(), drawPoint.y()); 
+	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
   glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
+	glPixelZoom(1,1);
 
   glBegin(GL_LINE_LOOP);
   glVertex2f(drawPoint.x(), drawPoint.y());
@@ -448,11 +454,15 @@ void GravityWell::draw()
    
   if (positive)
   {
+	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
     glDrawPixels(rotatedImage.width, rotatedImage.height, GL_BGRA, GL_UNSIGNED_BYTE, rotatedImage.data);
+	glPixelZoom(1,1);
   }
   else
   {
+	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
     glDrawPixels(rotatedImage.width, rotatedImage.height, GL_RGBA, GL_UNSIGNED_BYTE, rotatedImage.data);
+	glPixelZoom(1,1);
   }
   Vector2* center = getCenter();
   glColor3f(1.0, 1.0, 1.0);

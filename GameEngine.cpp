@@ -97,6 +97,7 @@ void GameEngine::loadResources()
 
   // either render to texture, or do something else here to make level thumbnails
   int tmpw = windowWidth, tmph = windowHeight;
+  xfactor = 1.0/3.0; yfactor = 1.0/3.0;
   for (int i = 0; i < LEVELS; i++)
   {
     Resize(tmpw / 3, tmph / 3);
@@ -110,6 +111,8 @@ void GameEngine::loadResources()
     levels[i].data = img;
     //loadImage("images/test.bmp", levels[i]);
   }
+  xfactor = 1.0;
+  yfactor = 1.0;
   Resize(tmpw, tmph);
   loadImage("images/test.bmp", testImage);
 }

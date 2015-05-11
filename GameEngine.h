@@ -69,6 +69,9 @@ public:
   int windowWidth;
   int windowHeight;
 
+  float xfactor;
+  float yfactor;
+
   MouseInput mouseInput;
   KeyInput keyInput;
 
