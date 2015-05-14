@@ -117,7 +117,7 @@ void Player::applyForces()
       
       break; }
     case Ground:
-      forces = forces + velocity * -5;
+      forces = forces + velocity * -0.95;
     default:
       break;
   }
@@ -331,13 +331,13 @@ void Player::draw()
 	glPixelZoom(GameEngine::getSingleton()->xfactor, GameEngine::getSingleton()->yfactor);
 	glDrawPixels(i.width, i.height, GL_BGRA, GL_UNSIGNED_BYTE, i.data);
 	glPixelZoom(1,1);
-  ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
+  /*ConvexPolygon* poly = (ConvexPolygon*) collisionObject;
   glColor3f(1.0, 1.0, 0.0);
   glBegin(GL_LINE_LOOP);
   for (int i = 0; i < poly->n; i++) {
     glVertex2f(poly->pts[i].x(), poly->pts[i].y());
   }
-  glEnd();
+  glEnd();*/
 }
 
 Wall::Wall(float x1, float y1, float x2, float y2, bool ow)
